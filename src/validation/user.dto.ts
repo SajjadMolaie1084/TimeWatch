@@ -1,5 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsPhoneNumber, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumberString,
+  IsPhoneNumber,
+  IsString,
+} from 'class-validator';
 
 export class SignUpDto {
   @ApiProperty({
@@ -31,6 +36,40 @@ export class SignUpDto {
   @IsNotEmpty()
   @IsPhoneNumber('IR')
   phoneNumber: String;
+}
+
+export class SignInDto {
+  @ApiProperty({
+    description: 'The Phone Number of user',
+    example: '09020000000',
+    type: 'string',
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsPhoneNumber('IR')
+  phoneNumber: String;
+}
+
+export class VerifyDto {
+  @ApiProperty({
+    description: 'The Phone Number of user',
+    example: '09020000000',
+    type: 'string',
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsPhoneNumber('IR')
+  phoneNumber: String;
+
+  @ApiProperty({
+    description: 'The Otp',
+    example: '1234',
+    type: 'string',
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsNumberString()
+  otp: string;
 }
 
 export class FindByPhoneDto {

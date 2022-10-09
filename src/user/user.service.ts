@@ -1,6 +1,6 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
-import { SignUpDto } from '../validation';
+import { SignInDto, SignUpDto, VerifyDto } from '../validation';
 import { UserRepository } from './user.repository';
 
 @Injectable()
@@ -30,5 +30,59 @@ export class UserService {
 
     // return token
     return token;
+  }
+
+  async signIn(dto: SignInDto) {
+    // try to find user in data base
+    const findUser = await this.UserRepository.findByPhone({
+      phoneNumber: dto.phoneNumber,
+    });
+
+    // if user not found throw error
+    if (findUser === null)
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+
+    // generate new otp to change it
+    const otp = await this.AuthService.generateOtp();
+
+    // update otp from data base
+    const updateOtp = await this.UserRepository.updateOtp(dto.phoneNumber, otp);
+
+    // send otp using auth service
+    const sendOtp = await this.AuthService.sendOtp({
+      phoneNumber: dto.phoneNumber,
+      otp: updateOtp.otp.toString(),
+    });
+
+    throw new HttpException('SMS send successfully', HttpStatus.OK);
+  }
+
+  async verify(dto: VerifyDto) {
+    // try to find User
+    const user = await this.UserRepository.findByPhone({
+      phoneNumber: dto.phoneNumber,
+    });
+
+    // if user not found throw error
+    if (user === null)
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+
+    // check otp and confirm otp
+    if (parseInt(dto.otp) !== user.otp || user.confirmOtp !== false)
+      throw new HttpException('Invalid Otp', HttpStatus.UNPROCESSABLE_ENTITY);
+
+    // update confirm otp
+    const confirmOtp = await this.UserRepository.updateConfirmOtp(
+      dto.phoneNumber,
+    );
+
+    // generate new token
+    const token = await this.AuthService.generateJwt({
+      sub: user.id,
+      phoneNumber: dto.phoneNumber,
+    });
+
+    // return token
+    throw new HttpException(token, HttpStatus.OK);
   }
 }

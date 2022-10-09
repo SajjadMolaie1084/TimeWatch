@@ -35,4 +35,23 @@ export class UserRepository {
     // return user
     return user;
   }
+
+  async updateOtp(phoneNumber: String, otp: Number) {
+    const user = await this.user.findOneAndUpdate(
+      { phoneNumber: phoneNumber },
+      { otp: otp, confirmOtp: false },
+      { new: true },
+    );
+
+    return user;
+  }
+
+  async updateConfirmOtp(phoneNumber: String) {
+    const user = await this.user.findOneAndUpdate(
+      { phoneNumber: phoneNumber },
+      { confirmOtp: true },
+      { new: true },
+    );
+    return user;
+  }
 }

@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { SignUpDto } from '../validation';
+import { SignInDto, SignUpDto, VerifyDto } from '../validation';
 import { UserService } from './user.service';
 
 @ApiTags('User')
@@ -27,5 +27,51 @@ export class UserController {
   @Post('signUp')
   signUp(@Body() dto: SignUpDto) {
     return this.UserService.signUp(dto);
+  }
+
+  @ApiOperation({
+    summary: 'Send otp for user',
+    description: 'Update Otp and Send new otp for user',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'SMS send successfully',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Error in sending data',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User no found',
+  })
+  @Post('signIn')
+  signIn(@Body() dto: SignInDto) {
+    return this.UserService.signIn(dto);
+  }
+
+  @ApiOperation({
+    summary: 'Check user otp and login',
+    description: 'Check user otp and return access_token',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Otp is correct and return access_token',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Error in sending data',
+  })
+  @ApiResponse({
+    status: 422,
+    description: 'Invalid otp',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User no found',
+  })
+  @Post('verify')
+  verify(@Body() dto: VerifyDto) {
+    return this.UserService.verify(dto);
   }
 }
