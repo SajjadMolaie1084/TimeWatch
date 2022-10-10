@@ -9,7 +9,7 @@ import {
 export class SignUpDto {
   @ApiProperty({
     description: 'The first name of user',
-    example: 'sajad',
+    example: 'Mark',
     type: 'string',
     required: true,
   })
@@ -19,7 +19,7 @@ export class SignUpDto {
 
   @ApiProperty({
     description: 'The last name of user',
-    example: 'molaie',
+    example: 'Zuckerberg',
     type: 'string',
     required: true,
   })

@@ -59,4 +59,9 @@ export class AuthService {
     req.write(data);
     req.end();
   }
+
+  async decodeJwt(token: string) {
+    const data = this.jwt.decode(token);
+    return data;
+  }
 }
