@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { SendOtpDto } from 'src/validation';
+import { sendInviteMessageDto, SendOtpDto } from 'src/validation';
 import * as https from 'https';
+import * as md5 from 'md5';
 
 @Injectable()
 export class AuthService {
@@ -34,15 +35,18 @@ export class AuthService {
   }
 
   async sendOtp(dto: SendOtpDto) {
+    // get sneder number and path from .env file
     const number = this.config.get('SMS_SENDING_NUMBER');
     const path = this.config.get('SMS_SENDING_PATH');
 
+    // create json data
     const data = JSON.stringify({
       from: number,
       to: dto.phoneNumber,
       text: `Welcome to Time Watch\nYour Code is ${dto.otp}`,
     });
 
+    // add connection
     const options = {
       hostname: 'console.melipayamak.com',
       port: 443,
@@ -54,8 +58,41 @@ export class AuthService {
       },
     };
 
+    // request to connection
     const req = https.request(options);
 
+    // post data to connection
+    req.write(data);
+    req.end();
+  }
+  async sendInviteMessage(dto: sendInviteMessageDto) {
+    // get sneder number and path from .env file
+    const number = this.config.get('SMS_SENDING_NUMBER');
+    const path = this.config.get('SMS_SENDING_PATH');
+
+    // create json data
+    const data = JSON.stringify({
+      from: number,
+      to: dto.phoneNumber,
+      text: `You Have a request from ${dto.companyName} to join this company click here https://timeWatch.com/invite/${dto.link}`,
+    });
+
+    // add connection
+    const options = {
+      hostname: 'console.melipayamak.com',
+      port: 443,
+      path: path,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': data.length,
+      },
+    };
+
+    // request to connection
+    const req = https.request(options);
+
+    // post data to connection
     req.write(data);
     req.end();
   }
@@ -63,5 +100,10 @@ export class AuthService {
   async decodeJwt(token: string) {
     const data = this.jwt.decode(token);
     return data;
+  }
+
+  async hash(data: string) {
+    const hash = await md5(data);
+    return hash;
   }
 }

@@ -2,10 +2,11 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserRepository } from 'src/user/user.repository';
+import { CompanyRepository } from '../company/company.repository';
 
 @Injectable()
-export class UserStrategy extends PassportStrategy(Strategy, 'user') {
-  constructor(private UserRepository: UserRepository) {
+export class CompanyStrategy extends PassportStrategy(Strategy, 'company') {
+  constructor(private CompanyRepository: CompanyRepository) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey:
@@ -14,10 +15,8 @@ export class UserStrategy extends PassportStrategy(Strategy, 'user') {
   }
 
   async validate(payload: any) {
-    const user = await this.UserRepository.findByPhone({
-      phoneNumber: payload.phoneNumber,
-    });
-    if (user === null) throw new UnauthorizedException();
+    const userCompany = await this.CompanyRepository.myCompany(payload.sub);
+    if (userCompany === null) throw new UnauthorizedException();
     return payload;
   }
 }

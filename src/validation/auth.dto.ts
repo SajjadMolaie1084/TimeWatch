@@ -1,4 +1,9 @@
-import { IsNotEmpty, IsPhoneNumber, IsNumberString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsPhoneNumber,
+  IsNumberString,
+  IsString,
+} from 'class-validator';
 
 export class SendOtpDto {
   @IsNotEmpty()
@@ -8,4 +13,18 @@ export class SendOtpDto {
   @IsNotEmpty()
   @IsNumberString()
   otp: String;
+}
+
+export class sendInviteMessageDto {
+  @IsNotEmpty()
+  @IsPhoneNumber('IR')
+  phoneNumber: String;
+
+  @IsNotEmpty()
+  @IsString()
+  companyName: String;
+
+  @IsNotEmpty()
+  @IsString()
+  link: String;
 }

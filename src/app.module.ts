@@ -6,11 +6,14 @@ import { AppController } from './app.controller';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { CompanyModule } from './company/company.module';
+import { InviteModule } from './invite/invite.module';
 
 @Module({
   imports: [
     UserModule,
     AuthModule,
+    CompanyModule,
+    InviteModule,
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
@@ -19,7 +22,6 @@ import { CompanyModule } from './company/company.module';
       }),
       inject: [ConfigService],
     }),
-    CompanyModule,
   ],
   controllers: [AppController],
 })
