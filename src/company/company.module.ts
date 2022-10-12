@@ -1,21 +1,16 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { CompanyController } from './company.controller';
 import { CompanyRepository } from './company.repository';
+import { UserStrategy } from 'src/strategy/user.strategy';
+import { CompanyStrategy } from 'src/strategy/company.strategy';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CompanySchema } from 'src/models/company.model';
-import { AuthModule } from 'src/auth/auth.module';
-import { UserStrategy } from 'src/strategy/user.strategy';
-import { InviteModule } from 'src/invite/invite.module';
-import { UserModule } from 'src/user/user.module';
-import { CompanyStrategy } from 'src/strategy/company.strategy';
 
+@Global()
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Company', schema: CompanySchema }]),
-    AuthModule,
-    InviteModule,
-    UserModule,
   ],
   providers: [CompanyService, CompanyRepository, UserStrategy, CompanyStrategy],
   controllers: [CompanyController],

@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AuthService } from '../auth/auth.service';
 import { User } from '../models/user.model';
-import { FindByPhoneDto, SignUpDto } from '../validation';
+import { AddCompanyDto, FindByPhoneDto, SignUpDto } from '../validation';
 
 @Injectable()
 export class UserRepository {
@@ -52,6 +52,21 @@ export class UserRepository {
       { confirmOtp: true },
       { new: true },
     );
+    return user;
+  }
+
+  async addCompany(dto: AddCompanyDto) {
+    const company = await this.user.findByIdAndUpdate(
+      dto.userId,
+      { company: dto.companyId },
+      { new: true },
+    );
+
+    return company;
+  }
+
+  async find(userId: String) {
+    const user = await this.user.findById(userId);
     return user;
   }
 }

@@ -4,7 +4,7 @@ export const InviteSchema = new Schema({
   company: { type: Schema.Types.ObjectId, ref: 'Company' },
   user: String,
   status: { type: String, enum: ['pending', 'accept'], default: 'pending' },
-  link: { type: String },
+  link: { type: String, unique: true },
 });
 
 export interface Invite {

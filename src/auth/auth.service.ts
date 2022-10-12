@@ -74,7 +74,7 @@ export class AuthService {
     const data = JSON.stringify({
       from: number,
       to: dto.phoneNumber,
-      text: `You Have a request from ${dto.companyName} to join this company click here https://timeWatch.com/invite/${dto.link}`,
+      text: `You Have a request from ${dto.companyName} to join this company click here http://192.168.172.1:3000/invite/${dto.link}`,
     });
 
     // add connection

@@ -77,3 +77,13 @@ export class FindByPhoneDto {
   @IsPhoneNumber('IR')
   phoneNumber: String;
 }
+
+export class AddCompanyDto {
+  @IsNotEmpty()
+  @IsString()
+  companyId: String;
+
+  @IsNotEmpty()
+  @IsString()
+  userId: String;
+}

@@ -30,4 +30,19 @@ export class InviteRepository {
     // return the invites
     return invites;
   }
+
+  async findInviteByLnik(link: String) {
+    const invite = await this.invite.findOne({ link: link });
+    return invite;
+  }
+
+  async changeInviteStatus(inviteLink: String) {
+    const invite = await this.invite.findOneAndUpdate(
+      { link: inviteLink },
+      { status: 'accept' },
+      { new: true },
+    );
+
+    return invite;
+  }
 }
