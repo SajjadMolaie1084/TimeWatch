@@ -1,6 +1,15 @@
-import { Body, Controller, Headers, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { CreateCompanyDto, SendInviteDto } from 'src/validation';
 import { CompanyService } from './company.service';
 
@@ -53,5 +62,17 @@ export class CompanyController {
   @Post('sendInvite')
   sendInvite(@Body() dto: SendInviteDto, @Headers() headers) {
     return this.CompanyService.sendInvite(dto, headers);
+  }
+
+  @UseGuards(AuthGuard('company'))
+  @Get('logs')
+  logs(@Headers() headers) {
+    return this.CompanyService.enterAndExitLogs(headers);
+  }
+
+  @UseGuards(AuthGuard('company'))
+  @Get('logs/:userId')
+  userLogs(@Headers() headers, @Param() param) {
+    return this.CompanyService.enterAndExitUserLogs(headers, param);
   }
 }

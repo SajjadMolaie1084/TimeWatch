@@ -1,4 +1,5 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Headers, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SignInDto, SignUpDto, VerifyDto } from '../validation';
 import { UserService } from './user.service';
@@ -73,5 +74,17 @@ export class UserController {
   @Post('verify')
   verify(@Body() dto: VerifyDto) {
     return this.UserService.verify(dto);
+  }
+
+  @UseGuards(AuthGuard('employee'))
+  @Post('enter')
+  enter(@Headers() headers) {
+    return this.UserService.addEnter(headers);
+  }
+
+  @UseGuards(AuthGuard('employee'))
+  @Post('exit')
+  exit(@Headers() headers) {
+    return this.UserService.addExit(headers);
   }
 }

@@ -85,4 +85,38 @@ export class UserService {
     // return token
     throw new HttpException(token, HttpStatus.OK);
   }
+
+  async addEnter(headers) {
+    // decode token
+    const authorization = headers.authorization;
+    const token = authorization.replace('Bearer ', '');
+    const data = await this.AuthService.decodeJwt(token);
+
+    const user = await this.UserRepository.find(data.sub);
+
+    const date = Date.now();
+
+    const enter = await this.UserRepository.addEnter({
+      company: user.company,
+      user: user.id,
+      date: date,
+    });
+  }
+
+  async addExit(headers) {
+    // decode token
+    const authorization = headers.authorization;
+    const token = authorization.replace('Bearer ', '');
+    const data = await this.AuthService.decodeJwt(token);
+
+    const user = await this.UserRepository.find(data.sub);
+
+    const date = Date.now();
+
+    const exit = await this.UserRepository.addExit({
+      company: user.company,
+      user: user.id,
+      date: date,
+    });
+  }
 }

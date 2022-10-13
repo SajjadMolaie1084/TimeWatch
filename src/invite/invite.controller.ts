@@ -1,4 +1,4 @@
-import { Controller, Param, Get, Headers, UseGuards } from '@nestjs/common';
+import { Controller, Param, Post, Headers, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { InviteService } from './invite.service';
@@ -28,7 +28,7 @@ export class InviteController {
     description: 'Invalid link',
   })
   @UseGuards(AuthGuard('user'))
-  @Get(':link')
+  @Post(':link')
   accept(@Param() param, @Headers() headers) {
     return this.InviteService.accept(param, headers);
   }

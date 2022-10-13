@@ -84,4 +84,38 @@ export class CompanyService {
     // return invite data
     return invite;
   }
+
+  async enterAndExitLogs(headers) {
+    // decode token
+    const authorization = headers.authorization;
+    const token = authorization.replace('Bearer ', '');
+    const data = await this.AuthService.decodeJwt(token);
+
+    const company = await this.CompanyRepository.myCompany(data.sub);
+
+    const logs = await this.UserRepository.enterAndExitLogs(company.id);
+
+    return logs;
+  }
+
+  async enterAndExitUserLogs(headers, param) {
+    // decode token
+    const authorization = headers.authorization;
+    const token = authorization.replace('Bearer ', '');
+    const data = await this.AuthService.decodeJwt(token);
+
+    const user = await this.UserRepository.find(param.userId);
+
+    if (user === null)
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+
+    const company = await this.CompanyRepository.myCompany(data.sub);
+
+    const logs = await this.UserRepository.enterAndExitUserLogs(
+      company.id,
+      user.id,
+    );
+
+    return logs;
+  }
 }

@@ -1,14 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { EnterExit } from 'src/models/enterExit.model';
 import { AuthService } from '../auth/auth.service';
 import { User } from '../models/user.model';
-import { AddCompanyDto, FindByPhoneDto, SignUpDto } from '../validation';
+import {
+  AddCompanyDto,
+  AddEnterExitDto,
+  FindByPhoneDto,
+  SignUpDto,
+} from '../validation';
 
 @Injectable()
 export class UserRepository {
   constructor(
     @InjectModel('User') private user: Model<User>,
+    @InjectModel('EnterExit') private enterExit: Model<EnterExit>,
     private auth: AuthService,
   ) {}
 
@@ -68,5 +75,37 @@ export class UserRepository {
   async find(userId: String) {
     const user = await this.user.findById(userId);
     return user;
+  }
+
+  async addEnter(dto: AddEnterExitDto) {
+    const enter = await this.enterExit.create({
+      company: dto.company,
+      user: dto.user,
+      date: dto.date,
+      type: 'Enter',
+    });
+    return enter;
+  }
+
+  async addExit(dto: AddEnterExitDto) {
+    const exit = await this.enterExit.create({
+      company: dto.company,
+      user: dto.user,
+      date: dto.date,
+      type: 'Exit',
+    });
+    return exit;
+  }
+
+  async enterAndExitLogs(companyId: String) {
+    const logs = await this.enterExit.find({ company: companyId });
+    return logs;
+  }
+  async enterAndExitUserLogs(companyId: String, userId: String) {
+    const logs = await this.enterExit.find({
+      company: companyId,
+      user: userId,
+    });
+    return logs;
   }
 }

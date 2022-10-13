@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsEnum,
   IsNotEmpty,
   IsNumberString,
   IsPhoneNumber,
@@ -86,4 +87,17 @@ export class AddCompanyDto {
   @IsNotEmpty()
   @IsString()
   userId: String;
+}
+
+export class AddEnterExitDto {
+  @IsNotEmpty()
+  @IsString()
+  company: String;
+
+  @IsNotEmpty()
+  @IsString()
+  user: String;
+
+  @IsNotEmpty()
+  date;
 }
