@@ -43,7 +43,7 @@ export class AuthService {
     const data = JSON.stringify({
       from: number,
       to: dto.phoneNumber,
-      text: `Welcome to Time Watch\nYour Code is ${dto.otp}`,
+      text: `Your Code is ${dto.otp}`,
     });
 
     // add connection
@@ -63,13 +63,12 @@ export class AuthService {
       console.log('statusCode: ' + res.statusCode);
 
       res.on('data', d => {
-        console.log(d)
-        return d
+        process.stdout.write(d)
+        
       });
     });
     req.on('error', error => {
       console.error(error);
-      return {error:error}
     });
 
     // post data to connection
@@ -105,7 +104,7 @@ export class AuthService {
       console.log('statusCode: ' + res.statusCode);
 
       res.on('data', d => {
-        console.log(d)
+        process.stdout.write(d)
       });
     });
     req.on('error', error => {
