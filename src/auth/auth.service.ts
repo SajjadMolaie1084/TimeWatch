@@ -63,7 +63,7 @@ export class AuthService {
       console.log('statusCode: ' + res.statusCode);
 
       res.on('data', d => {
-        process.stdout.write(d)
+        console.error(d)
       });
     });
     req.on('error', error => {
