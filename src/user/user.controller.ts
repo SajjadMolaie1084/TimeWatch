@@ -76,13 +76,13 @@ export class UserController {
     return this.UserService.verify(dto);
   }
 
-  @UseGuards(AuthGuard('employee'))
+  // @UseGuards(AuthGuard('employee'))
   @Post('enter')
   enter(@Headers() headers) {
     return this.UserService.addEnter(headers);
   }
 
-  @UseGuards(AuthGuard('employee'))
+  // @UseGuards(AuthGuard('employee'))
   @Post('exit')
   exit(@Headers() headers) {
     return this.UserService.addExit(headers);

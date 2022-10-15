@@ -100,4 +100,10 @@ export class AddEnterExitDto {
 
   @IsNotEmpty()
   date;
+
+  @IsString()
+  firstName:String;
+
+  @IsString()
+  lastName:String;
 }

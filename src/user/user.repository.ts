@@ -79,6 +79,8 @@ export class UserRepository {
 
   async addEnter(dto: AddEnterExitDto) {
     const enter = await this.enterExit.create({
+      firstName:dto.firstName,
+      lastName:dto.lastName,
       company: dto.company,
       user: dto.user,
       date: dto.date,
@@ -89,6 +91,8 @@ export class UserRepository {
 
   async addExit(dto: AddEnterExitDto) {
     const exit = await this.enterExit.create({
+      firstName:dto.firstName,
+      lastName:dto.lastName,
       company: dto.company,
       user: dto.user,
       date: dto.date,
@@ -98,12 +102,14 @@ export class UserRepository {
   }
 
   async enterAndExitLogs(companyId: String) {
-    const logs = await this.enterExit.find({ company: companyId });
+    const logs = await this.enterExit.find({
+      //  company: companyId 
+      });
     return logs;
   }
   async enterAndExitUserLogs(companyId: String, userId: String) {
     const logs = await this.enterExit.find({
-      company: companyId,
+      // company: companyId,
       user: userId,
     });
     return logs;

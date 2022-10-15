@@ -8,7 +8,7 @@ export class UserService {
   constructor(
     private UserRepository: UserRepository,
     private AuthService: AuthService,
-  ) {}
+  ) { }
 
   async signUp(dto: SignUpDto): Promise<{ access_token: string }> {
     const findUser = await this.UserRepository.findByPhone({
@@ -54,7 +54,9 @@ export class UserService {
       otp: updateOtp.otp.toString(),
     });
 
-    throw new HttpException('SMS send successfully', HttpStatus.OK);
+
+    return { otp: updateOtp.otp.toString() }
+    // throw new HttpException('SMS send successfully', HttpStatus.OK);
   }
 
   async verify(dto: VerifyDto) {
@@ -83,7 +85,8 @@ export class UserService {
     });
 
     // return token
-    throw new HttpException(token, HttpStatus.OK);
+    // throw new HttpException(token, HttpStatus.OK);
+    return { token: token }
   }
 
   async addEnter(headers) {
@@ -100,7 +103,10 @@ export class UserService {
       company: user.company,
       user: user.id,
       date: date,
+      firstName:user.firstName,
+      lastName:user.lastName
     });
+    return {enter};
   }
 
   async addExit(headers) {
@@ -117,6 +123,9 @@ export class UserService {
       company: user.company,
       user: user.id,
       date: date,
+      firstName:user.firstName,
+      lastName:user.lastName
     });
+    return {exit};
   }
 }

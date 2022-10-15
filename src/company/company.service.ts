@@ -14,7 +14,7 @@ export class CompanyService {
     private AuthService: AuthService,
     private InviteRepository: InviteRepository,
     private UserRepository: UserRepository,
-  ) {}
+  ) { }
 
   async create(dto: CreateCompanyDto, headers): Promise<Company> {
     // decode token
@@ -62,7 +62,9 @@ export class CompanyService {
 
     // if find invite throw error
     if (findInvite !== null)
-      throw new HttpException('Invite already sended', HttpStatus.CONFLICT);
+      return { msg: "Invite already sended" }
+
+    // throw new HttpException('Invite already sended', HttpStatus.CONFLICT);
 
     // generate link
     const link = await this.AuthService.hash(`user: ${dto.userPhoneNumber} `);
@@ -103,8 +105,14 @@ export class CompanyService {
     const authorization = headers.authorization;
     const token = authorization.replace('Bearer ', '');
     const data = await this.AuthService.decodeJwt(token);
-
-    const user = await this.UserRepository.find(param.userId);
+    var userID = "";
+    if (param.userId) {
+      userID = param.userId;
+    }
+    else{
+      userID=data.sub;
+    }
+    const user = await this.UserRepository.find(userID);
 
     if (user === null)
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
@@ -113,7 +121,7 @@ export class CompanyService {
 
     const logs = await this.UserRepository.enterAndExitUserLogs(
       company.id,
-      user.id,
+      userID,
     );
 
     return logs;

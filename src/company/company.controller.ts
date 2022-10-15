@@ -33,7 +33,7 @@ export class CompanyController {
     status: 409,
     description: 'Company already exists',
   })
-  @UseGuards(AuthGuard('user'))
+  // @UseGuards(AuthGuard('user'))
   @Post('create')
   create(@Body() dto: CreateCompanyDto, @Headers() headers) {
     return this.CompanyService.create(dto, headers);
@@ -58,19 +58,19 @@ export class CompanyController {
     status: 409,
     description: 'Invite already sended',
   })
-  @UseGuards(AuthGuard('company'))
+  // @UseGuards(AuthGuard('company'))
   @Post('sendInvite')
   sendInvite(@Body() dto: SendInviteDto, @Headers() headers) {
     return this.CompanyService.sendInvite(dto, headers);
   }
 
-  @UseGuards(AuthGuard('company'))
+  // @UseGuards(AuthGuard('company'))
   @Get('logs')
   logs(@Headers() headers) {
     return this.CompanyService.enterAndExitLogs(headers);
   }
 
-  @UseGuards(AuthGuard('company'))
+  // @UseGuards(AuthGuard('company'))
   @Get('logs/:userId')
   userLogs(@Headers() headers, @Param() param) {
     return this.CompanyService.enterAndExitUserLogs(headers, param);

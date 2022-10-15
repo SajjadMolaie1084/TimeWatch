@@ -10,7 +10,7 @@ export class AuthService {
   constructor(
     private jwt: JwtService,
     private readonly config: ConfigService,
-  ) {}
+  ) { }
   generateOtp(): number {
     // generate otp using Math
     const otp = Math.floor(Math.random() * 10000);
@@ -59,7 +59,16 @@ export class AuthService {
     };
 
     // request to connection
-    const req = https.request(options);
+    const req = https.request(options, res => {
+      console.log('statusCode: ' + res.statusCode);
+
+      res.on('data', d => {
+        process.stdout.write(d)
+      });
+    });
+    req.on('error', error => {
+      console.error(error);
+    });
 
     // post data to connection
     req.write(data);
@@ -96,12 +105,10 @@ export class AuthService {
     req.write(data);
     req.end();
   }
-
   async decodeJwt(token: string) {
     const data = this.jwt.decode(token);
     return data;
   }
-
   async hash(data: string) {
     const hash = await md5(data);
     return hash;
