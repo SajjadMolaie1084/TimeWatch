@@ -86,6 +86,7 @@ export class UserRepository {
       date: dto.date,
       type: 'Enter',
     });
+    console.log(enter);
     return enter;
   }
 
@@ -98,6 +99,7 @@ export class UserRepository {
       date: dto.date,
       type: 'Exit',
     });
+    console.log(exit);
     return exit;
   }
 
