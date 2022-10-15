@@ -63,11 +63,13 @@ export class AuthService {
       console.log('statusCode: ' + res.statusCode);
 
       res.on('data', d => {
-        console.error(d)
+        console.log(d)
+        return d
       });
     });
     req.on('error', error => {
       console.error(error);
+      return {error:error}
     });
 
     // post data to connection
@@ -99,7 +101,16 @@ export class AuthService {
     };
 
     // request to connection
-    const req = https.request(options);
+    const req = https.request(options, res => {
+      console.log('statusCode: ' + res.statusCode);
+
+      res.on('data', d => {
+        console.log(d)
+      });
+    });
+    req.on('error', error => {
+      console.error(error);
+    });
 
     // post data to connection
     req.write(data);
