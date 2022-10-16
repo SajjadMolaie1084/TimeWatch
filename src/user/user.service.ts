@@ -1,7 +1,8 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
-import { SignInDto, SignUpDto, VerifyDto } from '../validation';
+import { fcmDto, SignInDto, SignUpDto, VerifyDto } from '../validation';
 import { UserRepository } from './user.repository';
+import { initializeApp } from 'firebase-admin/app';
 
 @Injectable()
 export class UserService {
@@ -103,10 +104,10 @@ export class UserService {
       company: user.company,
       user: user.id,
       date: date,
-      firstName:user.firstName,
-      lastName:user.lastName
+      firstName: user.firstName,
+      lastName: user.lastName
     });
-    return {enter};
+    return { enter };
   }
 
   async addExit(headers) {
@@ -123,9 +124,26 @@ export class UserService {
       company: user.company,
       user: user.id,
       date: date,
-      firstName:user.firstName,
-      lastName:user.lastName
+      firstName: user.firstName,
+      lastName: user.lastName
     });
-    return {exit};
+    return { exit };
+  }
+  //update user google FCM id
+  async FCM(headers, dto: fcmDto) {
+    // decode token
+    const authorization = headers.authorization;
+    const token = authorization.replace('Bearer ', '');
+    const data = await this.AuthService.decodeJwt(token);
+    const user = await this.UserRepository.find(data.sub);
+    user.fcm = dto.fcmID;
+    user.save().then((x) => {
+      return {result:1};
+    }
+    ).catch((error) => {
+      return {result:0};
+    }
+    );
+
   }
 }

@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Headers, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { SignInDto, SignUpDto, VerifyDto } from '../validation';
+import { SignInDto, SignUpDto, VerifyDto,fcmDto } from '../validation';
 import { UserService } from './user.service';
 
 @ApiTags('User')
@@ -86,5 +86,10 @@ export class UserController {
   @Post('exit')
   exit(@Headers() headers) {
     return this.UserService.addExit(headers);
+  }
+
+  @Post('updateFCM')
+  updateFCM(@Headers() headers,@Body() fcmDto ) {
+    return this.UserService.FCM(headers,fcmDto);
   }
 }

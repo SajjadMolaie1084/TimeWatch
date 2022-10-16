@@ -89,6 +89,12 @@ export class AddCompanyDto {
   userId: String;
 }
 
+export class fcmDto {
+  @IsNotEmpty()
+  @IsString()
+  fcmID: string;
+}
+
 export class AddEnterExitDto {
   @IsNotEmpty()
   @IsString()

@@ -17,4 +17,5 @@ export interface User {
   company;
   otp: number;
   confirmOtp: boolean;
+  fcm:string;
 }
