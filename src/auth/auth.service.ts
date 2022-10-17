@@ -40,21 +40,30 @@ export class AuthService {
     const path = this.config.get('SMS_SENDING_PATH');
 
     // create json data
+    // const data = JSON.stringify({
+    //   from: number,
+    //   to: dto.phoneNumber,
+    //   text: `Your Code is ${dto.otp}`,
+    // });
     const data = JSON.stringify({
-      from: number,
-      to: dto.phoneNumber,
-      text: `Your Code is ${dto.otp}`,
+      "PhoneNumber": dto.phoneNumber,
+      "CustomPatternID": "7dd0d724-b228-492b-9f21-ff7c1e540e2b",
+      "Values": dto.otp,
+      "WithSignature": false,
+      "Token": "a2FydGVhbTA1NTk1ODIyMDFhMkZ5ZEdWaGJRPT0=",
+      "ProjectType": 0
     });
 
     // add connection
     const options = {
-      hostname: 'console.melipayamak.com',
+      hostname: 'api.mrapi.ir',
       port: 443,
-      path: path,
+      path: "/V2/sms/custom",
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Content-Length': data.length,
+        'Authentication':"wU2N1EzNxQTMmJWNzYmMxUWZ0MTOiNTN1IWNhFDZwEmO4YURzUTRGFjM"
       },
     };
 
@@ -64,7 +73,7 @@ export class AuthService {
 
       res.on('data', d => {
         process.stdout.write(d)
-        
+
       });
     });
     req.on('error', error => {

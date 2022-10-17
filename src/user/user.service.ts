@@ -56,7 +56,7 @@ export class UserService {
     });
 
 
-    return { otp: updateOtp.otp.toString() }
+    return { otp: 0 }
     // throw new HttpException('SMS send successfully', HttpStatus.OK);
   }
 
