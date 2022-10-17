@@ -2,7 +2,8 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
 import { fcmDto, SignInDto, SignUpDto, VerifyDto } from '../validation';
 import { UserRepository } from './user.repository';
-import { initializeApp } from 'firebase-admin/app';
+
+
 
 @Injectable()
 export class UserService {
@@ -137,6 +138,7 @@ export class UserService {
     const data = await this.AuthService.decodeJwt(token);
     const user = await this.UserRepository.find(data.sub);
     user.fcm = dto.fcmID;
+    console.log(dto.fcmID);
     user.save().then((x) => {
       return {result:1};
     }

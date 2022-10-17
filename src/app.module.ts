@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { CompanyModule } from './company/company.module';
 import { InviteModule } from './invite/invite.module';
+import { NotificationsService } from './notifications/notifications.service';
 
 @Module({
   imports: [

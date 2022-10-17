@@ -120,7 +120,7 @@ export class CompanyService {
     const company = await this.CompanyRepository.myCompany(data.sub);
 
     const logs = await this.UserRepository.enterAndExitUserLogs(
-      company.id,
+      null,
       userID,
     );
 
