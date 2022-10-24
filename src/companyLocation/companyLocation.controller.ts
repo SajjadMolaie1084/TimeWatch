@@ -10,21 +10,21 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateCompanyDto} from 'src/validation';
-import { CompanyService } from './company.service';
+import { companyLocationDto} from 'src/validation';
+import { CompanyLocationService } from './companyLocation.service';
 import { jwtStrategy } from 'src/strategy/jwt.strategy';
 
-@ApiTags('Company')
-@Controller('company')
+@ApiTags('CompanyLocation')
+@Controller('companyLocation')
 @UseGuards(jwtStrategy)
-export class CompanyController {
-  constructor(private CompanyService: CompanyService) {}
+export class CompanyLocationController {
+  constructor(private CompanyLocationService: CompanyLocationService) {}
   @ApiOperation({
-    summary: 'Create new Company',
+    summary: 'Create new CompanyLocation',
   })
   @ApiResponse({
     status: 201,
-    description: 'Company created successfully',
+    description: 'CompanyLocation created successfully',
   })
   @ApiResponse({
     status: 400,
@@ -32,25 +32,25 @@ export class CompanyController {
   })
   @ApiResponse({
     status: 409,
-    description: 'Company already exists',
+    description: 'CompanyLocation already exists',
   })
  
   @Post()
-  create(@Body() dto: CreateCompanyDto, @Headers() headers) {
-    return this.CompanyService.create(dto);
+  create(@Body() dto: companyLocationDto, @Headers() headers) {
+    return this.CompanyLocationService.create(dto);
   }
   @Get()
   findAll() {
-    return this.CompanyService.findAll();
+    return this.CompanyLocationService.findAll();
   }
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.CompanyService.findOne(id);
+    return this.CompanyLocationService.findOne(id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateCatDto: CreateCompanyDto) {
-    return this.CompanyService.update(id, updateCatDto);
+  update(@Param('id') id: string, @Body() updateCatDto: companyLocationDto) {
+    return this.CompanyLocationService.update(id, updateCatDto);
   }
 
   @Delete(':id')
@@ -59,7 +59,7 @@ export class CompanyController {
   }
   // @Post('location')
   // locationAdd(@Body() dto: LocationDto, @Headers() headers) {
-  //   return this.CompanyService.addLocation(dto, headers);
+  //   return this.CompanyLocationService.addLocation(dto, headers);
   // }
   // @ApiOperation({
   //   summary: 'Send invite for user',
@@ -80,21 +80,21 @@ export class CompanyController {
   //   status: 409,
   //   description: 'Invite already sended',
   // })
-  // // @UseGuards(AuthGuard('company'))
+  // // @UseGuards(AuthGuard('CompanyLocation'))
   // @Post('sendInvite')
   // sendInvite(@Body() dto: SendInviteDto, @Headers() headers) {
-  //   return this.CompanyService.sendInvite(dto, headers);
+  //   return this.CompanyLocationService.sendInvite(dto, headers);
   // }
 
   // @UseGuards(jwtStrategy)
   // @Get('logs')
   // logs(@Headers() headers) {
-  //   return this.CompanyService.enterAndExitLogs(headers);
+  //   return this.CompanyLocationService.enterAndExitLogs(headers);
   // }
 
   // @UseGuards(jwtStrategy)
   // @Get('logs/:userId')
   // userLogs(@Headers() headers, @Param() param) {
-  //   return this.CompanyService.enterAndExitUserLogs(headers, param);
+  //   return this.CompanyLocationService.enterAndExitUserLogs(headers, param);
   // }
 }

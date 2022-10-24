@@ -1,20 +1,19 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-
 import { AppController } from './app.controller';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { CompanyModule } from './company/company.module';
-import { InviteModule } from './invite/invite.module';
-import { NotificationsService } from './notifications/notifications.service';
+import { CompanyLocationModule } from './companyLocation/companyLocation.module';
 
 @Module({
   imports: [
     UserModule,
     AuthModule,
     CompanyModule,
-    InviteModule,
+    CompanyLocationModule,
+    // InviteModule,
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
@@ -25,5 +24,6 @@ import { NotificationsService } from './notifications/notifications.service';
     }),
   ],
   controllers: [AppController],
+ 
 })
-export class AppModule {}
+export class AppModule { }

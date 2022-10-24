@@ -32,11 +32,11 @@ export class InviteService {
     const user = await this.UserRepository.find(data.sub);
 
     // if user have company throw error
-    if (user.company !== null)
-      throw new HttpException(
-        'The user is already in a Company',
-        HttpStatus.CONFLICT,
-      );
+    // if (user.company !== null)
+    //   throw new HttpException(
+    //     'The user is already in a Company',
+    //     HttpStatus.CONFLICT,
+    //   );
 
     // change invite status from 'pending' to 'accept'
     const changeInviteStatus = await this.InviteRepository.changeInviteStatus(

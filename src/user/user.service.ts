@@ -72,7 +72,7 @@ export class UserService {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
     // check otp and confirm otp
-    if (parseInt(dto.otp) !== user.otp || user.confirmOtp !== false)
+    if (parseInt(dto.otp) !== user.otp )
       throw new HttpException('Invalid Otp', HttpStatus.UNPROCESSABLE_ENTITY);
 
     // update confirm otp
@@ -102,7 +102,7 @@ export class UserService {
     const date = Date.now();
 
     const enter = await this.UserRepository.addEnter({
-      company: user.company,
+      company: '',
       user: user.id,
       date: date,
       firstName: user.firstName,
@@ -122,7 +122,7 @@ export class UserService {
     const date = Date.now();
 
     const exit = await this.UserRepository.addExit({
-      company: user.company,
+      company: '',
       user: user.id,
       date: date,
       firstName: user.firstName,

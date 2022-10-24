@@ -5,7 +5,6 @@ import { UserRepository } from './user.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserSchema } from '../models/user.model';
 import { EnterExitSchema } from 'src/models/enterExit.model';
-import { EmployeeStrategy } from 'src/strategy/employee.strategy';
 
 @Global()
 @Module({
@@ -13,7 +12,7 @@ import { EmployeeStrategy } from 'src/strategy/employee.strategy';
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
     MongooseModule.forFeature([{ name: 'EnterExit', schema: EnterExitSchema }]),
   ],
-  providers: [UserService, UserRepository, EmployeeStrategy],
+  providers: [UserService, UserRepository],
   controllers: [UserController],
   exports: [UserRepository],
 })

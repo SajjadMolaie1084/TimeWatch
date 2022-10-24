@@ -6,7 +6,7 @@ export const UserSchema = new Schema({
   phoneNumber: { type: String, require: true, unique: true },
   company: { type: Schema.Types.ObjectId, ref: 'Company', default: null },
   otp: { type: Number, require: true },
-  confirmOtp: { type: Boolean, default: false },
+  otpDate: Date,
 });
 
 export interface User {
@@ -14,8 +14,7 @@ export interface User {
   firstName: string;
   lastName: string;
   phoneNumber: string;
-  company;
   otp: number;
-  confirmOtp: boolean;
+  otpDate: Date;
   fcm:string;
 }
