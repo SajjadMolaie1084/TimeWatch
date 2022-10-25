@@ -1,16 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus  } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { sendInviteMessageDto, SendOtpDto } from 'src/validation';
+import { UserService } from '../user/user.service';
+import { sendInviteMessageDto, SendOtpDto,fcmDto, SignInDto, SignUpDto, VerifyDto } from 'src/validation';
 import * as https from 'https';
 import * as md5 from 'md5';
+
+
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwt: JwtService,
     private readonly config: ConfigService,
+    private userService: UserService,
   ) { }
+
+
   generateOtp(): number {
     // generate otp using Math
     const otp = Math.floor(Math.random() * 10000);
@@ -18,11 +24,63 @@ export class AuthService {
     // return otp code
     return otp;
   }
+  async signUp(dto: SignUpDto){
+    const findUser = await this.userService.findByPhone(dto.phoneNumber);
+    // if user find throw error
+    if (findUser !== null)
+      throw new HttpException('User Already exists', HttpStatus.CONFLICT);
+    
+    // create user using user repository
+    return await this.userService.create(dto);
 
-  async generateJwt(data: {
-    sub: String;
-    phoneNumber: String;
-  }): Promise<{ access_token: string }> {
+  }
+  async signIn(dto: SignInDto) {
+    // try to find user in data base
+    const findUser = await this.userService.findByPhone(dto.phoneNumber);
+
+    // if user not found throw error
+    if (findUser === null)
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+
+    // generate new otp to change it
+    const otp = await this.generateOtp();
+
+    // update otp from data base
+    const updateOtp = await this.userService.updateOtp(dto.phoneNumber, otp);
+
+    // send otp using auth service
+    const sendOtp = await this.sendOtp({
+      phoneNumber: dto.phoneNumber,
+      otp: otp.toString(),
+    });
+
+    return { otp: 0 }
+  }
+  async verify(dto: VerifyDto) {
+    // try to find User
+    const user = await this.userService.findByPhone(dto.phoneNumber);
+
+    // if user not found throw error
+    if (user === null)
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+
+    // check otp and confirm otp
+    if (parseInt(dto.otp) !== user.otp ||  Math.abs(Date.now()-user.otpDate)>1000*120 )
+      throw new HttpException('Invalid Otp', HttpStatus.UNPROCESSABLE_ENTITY);
+
+    
+    // generate new token
+    const token = await this.generateJwt({
+      uid:user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      phoneNumber: user.phoneNumber
+    });
+
+
+    return  token 
+  }
+  async generateJwt(data): Promise<{ access_token: string }> {
     const payload = data;
 
     const secret = this.config.get('SECRET_KEY');

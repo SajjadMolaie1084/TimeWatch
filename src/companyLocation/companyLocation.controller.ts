@@ -12,11 +12,11 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { companyLocationDto} from 'src/validation';
 import { CompanyLocationService } from './companyLocation.service';
-import { jwtStrategy } from 'src/strategy/jwt.strategy';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('CompanyLocation')
 @Controller('companyLocation')
-@UseGuards(jwtStrategy)
+@UseGuards(JwtAuthGuard)
 export class CompanyLocationController {
   constructor(private CompanyLocationService: CompanyLocationService) {}
   @ApiOperation({
@@ -86,13 +86,13 @@ export class CompanyLocationController {
   //   return this.CompanyLocationService.sendInvite(dto, headers);
   // }
 
-  // @UseGuards(jwtStrategy)
+  // @UseGuards(LocalAuthGuard)
   // @Get('logs')
   // logs(@Headers() headers) {
   //   return this.CompanyLocationService.enterAndExitLogs(headers);
   // }
 
-  // @UseGuards(jwtStrategy)
+  // @UseGuards(LocalAuthGuard)
   // @Get('logs/:userId')
   // userLogs(@Headers() headers, @Param() param) {
   //   return this.CompanyLocationService.enterAndExitUserLogs(headers, param);

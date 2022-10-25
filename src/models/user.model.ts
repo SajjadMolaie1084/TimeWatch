@@ -4,7 +4,6 @@ export const UserSchema = new Schema({
   firstName: { type: String, require: true },
   lastName: { type: String, require: true },
   phoneNumber: { type: String, require: true, unique: true },
-  company: { type: Schema.Types.ObjectId, ref: 'Company', default: null },
   otp: { type: Number, require: true },
   otpDate: Date,
 });
@@ -15,6 +14,6 @@ export interface User {
   lastName: string;
   phoneNumber: string;
   otp: number;
-  otpDate: Date;
+  otpDate: number;
   fcm:string;
 }

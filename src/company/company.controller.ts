@@ -12,11 +12,11 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateCompanyDto} from 'src/validation';
 import { CompanyService } from './company.service';
-import { jwtStrategy } from 'src/strategy/jwt.strategy';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('Company')
 @Controller('company')
-@UseGuards(jwtStrategy)
+@UseGuards(JwtAuthGuard)
 export class CompanyController {
   constructor(private CompanyService: CompanyService) {}
   @ApiOperation({
@@ -36,7 +36,7 @@ export class CompanyController {
   })
  
   @Post()
-  create(@Body() dto: CreateCompanyDto, @Headers() headers) {
+  create(@Body() dto: CreateCompanyDto) {
     return this.CompanyService.create(dto);
   }
   @Get()
@@ -86,13 +86,13 @@ export class CompanyController {
   //   return this.CompanyService.sendInvite(dto, headers);
   // }
 
-  // @UseGuards(jwtStrategy)
+  // @UseGuards(LocalAuthGuard)
   // @Get('logs')
   // logs(@Headers() headers) {
   //   return this.CompanyService.enterAndExitLogs(headers);
   // }
 
-  // @UseGuards(jwtStrategy)
+  // @UseGuards(LocalAuthGuard)
   // @Get('logs/:userId')
   // userLogs(@Headers() headers, @Param() param) {
   //   return this.CompanyService.enterAndExitUserLogs(headers, param);

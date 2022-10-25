@@ -1,19 +1,16 @@
 import { Global, Module } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
-import { UserRepository } from './user.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserSchema } from '../models/user.model';
-import { EnterExitSchema } from 'src/models/enterExit.model';
 
 @Global()
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
-    MongooseModule.forFeature([{ name: 'EnterExit', schema: EnterExitSchema }]),
-  ],
-  providers: [UserService, UserRepository],
+    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }])
+    ],
+  providers: [UserService],
   controllers: [UserController],
-  exports: [UserRepository],
+  exports: [UserService]
 })
 export class UserModule {}

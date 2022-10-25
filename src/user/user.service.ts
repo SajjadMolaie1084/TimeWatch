@@ -1,151 +1,48 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { AuthService } from '../auth/auth.service';
-import { fcmDto, SignInDto, SignUpDto, VerifyDto } from '../validation';
-import { UserRepository } from './user.repository';
-
+import { fcmDto, SignUpDto } from '../validation';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { User } from '../models/user.model';
 
 
 @Injectable()
 export class UserService {
   constructor(
-    private UserRepository: UserRepository,
-    private AuthService: AuthService,
+    @InjectModel('User') private User: Model<User>,
   ) { }
 
-  async signUp(dto: SignUpDto): Promise<{ access_token: string }> {
-    const findUser = await this.UserRepository.findByPhone({
-      phoneNumber: dto.phoneNumber,
-    });
-
-    // if user find throw error
-    if (findUser !== null)
-      throw new HttpException('User Already exists', HttpStatus.CONFLICT);
-
-    // create user using user repository
-    const user = await this.UserRepository.create(dto);
-
-    // generate token
-    const token = await this.AuthService.generateJwt({
-      sub: user.id,
-      phoneNumber: user.phoneNumber,
-    });
-
-    // return token
-    return token;
+  async create(dto: SignUpDto): Promise<User> {
+    if (await this.User.exists({ phoneNumber: dto.phoneNumber }).exec()) {
+       throw new HttpException('User already exists', HttpStatus.CONFLICT)
+    }
+    else {
+      return await this.User.create(dto);
+    }
+  }
+  async findAll() {
+    return await this.User.find().exec();
   }
 
-  async signIn(dto: SignInDto) {
-    // try to find user in data base
-    const findUser = await this.UserRepository.findByPhone({
-      phoneNumber: dto.phoneNumber,
-    });
-
-    // if user not found throw error
-    if (findUser === null)
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-
-    // generate new otp to change it
-    const otp = await this.AuthService.generateOtp();
-
-    // update otp from data base
-    const updateOtp = await this.UserRepository.updateOtp(dto.phoneNumber, otp);
-
-    // send otp using auth service
-    const sendOtp = await this.AuthService.sendOtp({
-      phoneNumber: dto.phoneNumber,
-      otp: updateOtp.otp.toString(),
-    });
-
-
-    return { otp: 0 }
-    // throw new HttpException('SMS send successfully', HttpStatus.OK);
+  async findOne(id: string) {
+    return await this.User.findOne({ _id:id });
   }
-
-  async verify(dto: VerifyDto) {
-    // try to find User
-    const user = await this.UserRepository.findByPhone({
-      phoneNumber: dto.phoneNumber,
-    });
-
-    // if user not found throw error
-    if (user === null)
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-
-    // check otp and confirm otp
-    if (parseInt(dto.otp) !== user.otp )
-      throw new HttpException('Invalid Otp', HttpStatus.UNPROCESSABLE_ENTITY);
-
-    // update confirm otp
-    const confirmOtp = await this.UserRepository.updateConfirmOtp(
-      dto.phoneNumber,
-    );
-
-    // generate new token
-    const token = await this.AuthService.generateJwt({
-      sub: user.id,
-      phoneNumber: dto.phoneNumber,
-    });
-
-    // return token
-    // throw new HttpException(token, HttpStatus.OK);
-    return { token: token }
+  async findByCompany(cid: string) {
+    return await this.User.find({ company:cid });
   }
-
-  async addEnter(headers) {
-    // decode token
-    const authorization = headers.authorization;
-    const token = authorization.replace('Bearer ', '');
-    const data = await this.AuthService.decodeJwt(token);
-
-    const user = await this.UserRepository.find(data.sub);
-
-    const date = Date.now();
-
-    const enter = await this.UserRepository.addEnter({
-      company: '',
-      user: user.id,
-      date: date,
-      firstName: user.firstName,
-      lastName: user.lastName
-    });
-    return { enter };
-  }
-
-  async addExit(headers) {
-    // decode token
-    const authorization = headers.authorization;
-    const token = authorization.replace('Bearer ', '');
-    const data = await this.AuthService.decodeJwt(token);
-
-    const user = await this.UserRepository.find(data.sub);
-
-    const date = Date.now();
-
-    const exit = await this.UserRepository.addExit({
-      company: '',
-      user: user.id,
-      date: date,
-      firstName: user.firstName,
-      lastName: user.lastName
-    });
-    return { exit };
+  async findByPhone(phone: String) {
+    return await this.User.findOne({ phoneNumber: phone });
   }
   //update user google FCM id
-  async FCM(headers, dto: fcmDto) {
-    // decode token
-    const authorization = headers.authorization;
-    const token = authorization.replace('Bearer ', '');
-    const data = await this.AuthService.decodeJwt(token);
-    const user = await this.UserRepository.find(data.sub);
-    user.fcm = dto.fcmID;
-    console.log(dto.fcmID);
-    user.save().then((x) => {
-      return {result:1};
-    }
-    ).catch((error) => {
-      return {result:0};
-    }
-    );
-
+  async updateFCM(uid, dto: fcmDto) {
+    return await  this.User.updateOne({_id:uid},{fcm:dto.fcmID}).exec();
+  }
+  async update(uid, dto: SignUpDto) {
+    return await  this.User.updateOne({_id:uid},dto).exec();
+  }
+  async updateOtp(phoneNumber, otp) {
+    return await  this.User.updateOne({phoneNumber:phoneNumber},{otp:otp,otpDate:Date.now()}).exec();
+  }
+  async delete(uid) {
+    return await  this.User.updateOne({_id:uid},{delete:1}).exec();
   }
 }

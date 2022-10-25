@@ -29,6 +29,9 @@ export class CompanyService {
   async update(id: string, updateCompany: CreateCompanyDto) {
     return await this.company.updateOne({ _id: id }, updateCompany).exec()
   }
+  async delete(id: string) {
+    return await this.company.deleteOne({ _id: id }).exec()
+  }
   // async sendInvite(dto: SendInviteDto, headers): Promise<Invite | any> {
   //   // try to find user
   //   const findUser = await this.UserRepository.findByPhone({

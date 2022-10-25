@@ -4,8 +4,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { EnterExitModule } from './enterExit/enterExit.module';
 import { CompanyModule } from './company/company.module';
 import { CompanyLocationModule } from './companyLocation/companyLocation.module';
+import { CompanyUserModule } from './companyUser/companyUser.module';
+import { RequestModule } from './request/request.module';
 
 @Module({
   imports: [
@@ -13,7 +16,9 @@ import { CompanyLocationModule } from './companyLocation/companyLocation.module'
     AuthModule,
     CompanyModule,
     CompanyLocationModule,
-    // InviteModule,
+    CompanyUserModule,
+    EnterExitModule,
+    RequestModule,
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],

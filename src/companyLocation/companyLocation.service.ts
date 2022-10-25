@@ -9,7 +9,6 @@ export class CompanyLocationService {
   constructor(
     @InjectModel('CompanyLocation') private CompanyLocation: Model<CompanyLocation>
   ) { }
-
   async create(dto: companyLocationDto): Promise<CompanyLocation> {
     if (await this.CompanyLocation.exists({ name: dto.name,company: dto.company}).exec()) {
       throw new HttpException('CompanyLocation already exists', HttpStatus.CONFLICT)
@@ -19,7 +18,6 @@ export class CompanyLocationService {
     }
 
   }
-
   async findAll() {
     return await this.CompanyLocation.find().exec();
   }
@@ -29,5 +27,7 @@ export class CompanyLocationService {
   async update(id: string, updateCompanyLocation: companyLocationDto) {
     return await this.CompanyLocation.updateOne({ _id: id }, updateCompanyLocation).exec()
   }
-
+  async delete(id: string) {
+    return await this.CompanyLocation.deleteOne({ _id: id }).exec()
+  }
 }
