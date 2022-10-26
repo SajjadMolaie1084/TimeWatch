@@ -10,7 +10,7 @@ export class CompanyUserService {
     @InjectModel('CompanyUser') private CompanyUser: Model<CompanyUser>
   ) { }
   async create(dto: companyUserDto): Promise<CompanyUser> {
-    if (await this.CompanyUser.exists({ name: dto.user,company: dto.company}).exec()) {
+    if (await this.CompanyUser.exists({ user: dto.user,company: dto.company}).exec()) {
       throw new HttpException('CompanyUser already exists', HttpStatus.CONFLICT)
     }
     else {
@@ -18,8 +18,8 @@ export class CompanyUserService {
     }
 
   }
-  async findAll() {
-    return await this.CompanyUser.find().exec();
+  async findAll(uid: String) {
+    return await this.CompanyUser.find({user:uid}).populate('company').exec();
   }
   async findOne(id: string) {
     return await this.CompanyUser.findOne({ _id:id }).exec();

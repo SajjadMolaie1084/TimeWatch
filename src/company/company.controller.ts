@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateCompanyDto} from 'src/validation';
+import { CreateCompanyDto} from './dto/company.dto';
 import { CompanyService } from './company.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
@@ -41,7 +41,7 @@ export class CompanyController {
     return this.CompanyService.create(dto);
   }
   @Get()
-  findAll(@Request() req) {
+  findAll() {
     return this.CompanyService.findAll();
   }
   @Get(':id')

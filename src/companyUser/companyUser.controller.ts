@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -40,8 +41,8 @@ export class CompanyUserController {
     return this.CompanyUserService.create(dto);
   }
   @Get()
-  findAll() {
-    return this.CompanyUserService.findAll();
+  findAll(@Request() req) {
+    return this.CompanyUserService.findAll(req.user.uid);
   }
   @Get(':id')
   findOne(@Param('id') id: string) {

@@ -2,7 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { CompanyController } from './company.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CompanySchema } from 'src/models/company.model';
+import { CompanySchema } from 'src/company/model/company.model';
 
 @Global()
 @Module({
