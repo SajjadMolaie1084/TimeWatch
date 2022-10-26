@@ -15,6 +15,7 @@ export class requestDto {
   company;
   @IsNotEmpty()
   type: String;
- 
+  @IsNotEmpty()
+  description: String;
 }
 

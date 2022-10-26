@@ -5,6 +5,7 @@ import {
   Get,
   Headers,
   Param,
+  Request,
   Post,
   Put,
   UseGuards,
@@ -40,7 +41,7 @@ export class CompanyController {
     return this.CompanyService.create(dto);
   }
   @Get()
-  findAll() {
+  findAll(@Request() req) {
     return this.CompanyService.findAll();
   }
   @Get(':id')

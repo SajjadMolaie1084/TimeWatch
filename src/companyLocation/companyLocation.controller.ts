@@ -52,7 +52,10 @@ export class CompanyLocationController {
   update(@Param('id') id: string, @Body() updateCatDto: companyLocationDto) {
     return this.CompanyLocationService.update(id, updateCatDto);
   }
-
+  @Get('/company/:id')
+  findByCompany(@Param('id') id: string) {
+    return this.CompanyLocationService.findByCompany(id);
+  }
   @Delete(':id')
   remove(@Param('id') id: string) {
     return `This action removes a #${id} cat`;

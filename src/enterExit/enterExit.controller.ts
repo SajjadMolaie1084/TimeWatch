@@ -41,7 +41,7 @@ export class EnterExitController {
   create(@Body() dto: enterExitDto, @Request() req ) {
     return this.EnterExitService.create(dto,req.user);
   }
-  @Get('')
+  @Get()
   findAll(@Request() req) {
     return this.EnterExitService.findAll(req.user);
   }

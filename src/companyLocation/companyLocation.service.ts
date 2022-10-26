@@ -24,6 +24,9 @@ export class CompanyLocationService {
   async findOne(id: string) {
     return await this.CompanyLocation.findOne({ _id:id }).exec();
   }
+  async findByCompany(id) {
+    return await this.CompanyLocation.find({company:id}).exec();
+  }
   async update(id: string, updateCompanyLocation: companyLocationDto) {
     return await this.CompanyLocation.updateOne({ _id: id }, updateCompanyLocation).exec()
   }

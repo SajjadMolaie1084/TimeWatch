@@ -11,20 +11,13 @@ export class RequestService {
   ) { }
 
   async create(dto: requestDto): Promise<Request> {
-    if (await this.request.exists({ name: dto.company }).exec()) {
-      throw new HttpException('Request already exists', HttpStatus.CONFLICT)
-    }
-    else {
-      return await this.request.create(dto);
-    }
-
+    return await this.request.create(dto);
   }
-
-  async findAll() {
-    return await this.request.find().exec();
+  async findAll(uid: string) {
+    return await this.request.find({ user: uid }).exec();
   }
   async findOne(id: string) {
-    return await this.request.findOne({ _id:id }).exec();
+    return await this.request.findOne({ _id: id }).exec();
   }
   async update(id: string, updateRequest: requestDto) {
     return await this.request.updateOne({ _id: id }, updateRequest).exec()
