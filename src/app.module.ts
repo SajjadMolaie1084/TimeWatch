@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { EnterExitModule } from './enterExit/enterExit.module';
 import { CompanyModule } from './company/company.module';
 import { CompanyLocationModule } from './companyLocation/companyLocation.module';
+import { ManagerUserModule } from './ManagerUser/ManagerUser.module';
 import { CompanyUserModule } from './companyUser/companyUser.module';
 import { RequestModule } from './request/request.module';
 
@@ -19,6 +20,7 @@ import { RequestModule } from './request/request.module';
     CompanyUserModule,
     EnterExitModule,
     RequestModule,
+    ManagerUserModule,
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
