@@ -2,7 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { RequestService } from './request.service';
 import { RequestController } from './request.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { RequestSchema } from '../models/request.model';
+import { RequestSchema } from './model/request.model';
 
 @Global()
 @Module({

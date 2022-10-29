@@ -2,7 +2,7 @@ import { Schema } from 'mongoose';
 
 export const EnterExitSchema = new Schema({
   company: { type: Schema.Types.ObjectId, ref: 'Company' },
-  location: { type: Schema.Types.ObjectId, ref: 'Location' },
+  location: { type: Schema.Types.ObjectId, ref: 'CompanyLocation' },
   user: { type: Schema.Types.ObjectId, ref: 'User' },
   type: { type: String, enum: ['Enter', 'Exit'] },
   date: Number,
@@ -12,8 +12,6 @@ export const EnterExitSchema = new Schema({
 
 export interface EnterExit {
   id: String;
-  firstName: string;
-  lastName: string;
   company;
   location;
   user;

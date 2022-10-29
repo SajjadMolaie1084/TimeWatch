@@ -46,8 +46,8 @@ export class EnterExitController {
     return this.EnterExitService.findAll(req.user);
   }
   @Get(':id')
-  findAllbyCompany(@Param('id') id: string) {
-    return this.EnterExitService.findAllbyCompany(id);
+  findAllbyCompany(@Request() req,@Param('id') id: string) {
+    return this.EnterExitService.findAllbyCompany(id,req.user);
   }
   @Get(':id')
   findAllbyUser(@Param('id') id: string) {

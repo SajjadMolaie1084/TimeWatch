@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CompanyLocation } from 'src/models/companyLocation.model';
+import { CompanyLocation } from 'src/companyLocation/model/companyLocation.model';
 import { companyLocationDto } from 'src/validation';
 
 @Injectable()

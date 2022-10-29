@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CompanyUser } from 'src/models/companyUser.model';
+import { CompanyUser } from 'src/companyUser/model/companyUser.model';
 import { companyUserDto } from 'src/validation';
 
 @Injectable()
@@ -30,4 +30,5 @@ export class CompanyUserService {
   async delete(id: string) {
     return await this.CompanyUser.deleteOne({ _id: id }).exec()
   }
+  
 }

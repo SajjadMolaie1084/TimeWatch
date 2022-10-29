@@ -2,7 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { CompanyUserService } from './companyUser.service';
 import { CompanyUserController } from './companyUser.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CompanyUserSchema } from '../models/companyUser.model';
+import { CompanyUserSchema } from './model/companyUser.model';
 
 @Global()
 @Module({
@@ -11,5 +11,7 @@ import { CompanyUserSchema } from '../models/companyUser.model';
   ],
   providers: [CompanyUserService],
   controllers: [CompanyUserController],
+  exports: [CompanyUserService]
+
 })
 export class CompanyUserModule {}

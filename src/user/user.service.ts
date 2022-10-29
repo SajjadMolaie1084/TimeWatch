@@ -2,7 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { fcmDto, SignUpDto } from '../validation';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from '../models/user.model';
+import { User } from './model/user.model';
 
 
 @Injectable()
