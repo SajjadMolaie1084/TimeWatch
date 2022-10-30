@@ -9,19 +9,24 @@ export class CompanyService {
   constructor(
     @InjectModel('Company') private company: Model<Company>
   ) { }
-  async create(dto: CreateCompanyDto): Promise<Company> {
+  async create(dto: CreateCompanyDto, user): Promise<Company> {
     if (await this.company.exists({ name: dto.name }).exec()) {
       throw new HttpException('Company already exists', HttpStatus.CONFLICT)
     }
     else {
-      return await this.company.create(dto);
+
+      return await this.company.create({
+        name: dto.name,
+        phoneNumber: dto.phoneNumber,
+        owner: user.uid
+      });
     }
   }
   async findAll() {
     return await this.company.find().exec();
   }
   async findOne(id: string) {
-    return await this.company.findOne({ _id:id }).exec();
+    return await this.company.findOne({ _id: id }).exec();
   }
   async update(id: string, updateCompany: CreateCompanyDto) {
     return await this.company.updateOne({ _id: id }, updateCompany).exec()

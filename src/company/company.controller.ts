@@ -37,8 +37,8 @@ export class CompanyController {
   })
  
   @Post()
-  create(@Body() dto: CreateCompanyDto) {
-    return this.CompanyService.create(dto);
+  create(@Body() dto: CreateCompanyDto,@Request() req) {
+    return this.CompanyService.create(dto,req.user);
   }
   @Get()
   findAll() {

@@ -45,11 +45,11 @@ export class EnterExitController {
   findAll(@Request() req) {
     return this.EnterExitService.findAll(req.user);
   }
-  @Get(':id')
+  @Get('/company/:id')
   findAllbyCompany(@Request() req,@Param('id') id: string) {
     return this.EnterExitService.findAllbyCompany(id,req.user);
   }
-  @Get(':id')
+  @Get('/user/:id')
   findAllbyUser(@Param('id') id: string) {
     return this.EnterExitService.findAllbyUser(id);
   }

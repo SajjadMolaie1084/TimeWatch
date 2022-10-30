@@ -1,10 +1,14 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
+import {CompanyUserService} from "../companyUser/companyUser.service"
+
+
 
 @Injectable()
 export class jwtStrategy extends PassportStrategy(Strategy) {
   constructor(
+    private companyUserService: CompanyUserService
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -20,8 +24,9 @@ export class jwtStrategy extends PassportStrategy(Strategy) {
       lastName: payload.lastName,
       phoneNumber: payload.phoneNumber,
       iat: payload.iat,
+      company:{}
     }
-    
+    user.company=await this.companyUserService.findAll(payload.uid);
     return user;
   }
 }

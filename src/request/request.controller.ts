@@ -44,6 +44,10 @@ export class RequestController {
   findAll(@Request() req) {
     return this.RequestService.findAll(req.user.uid);
   }
+  @Get("/company/:id")
+  findAllbyCompany(@Request() req,@Param('id') cid: string) {
+    return this.RequestService.findAllByCompany(req.user.uid,cid);
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.RequestService.findOne(id);
