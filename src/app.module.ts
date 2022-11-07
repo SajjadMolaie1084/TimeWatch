@@ -10,6 +10,7 @@ import { CompanyLocationModule } from './companyLocation/companyLocation.module'
 import { ManagerUserModule } from './ManagerUser/ManagerUser.module';
 import { CompanyUserModule } from './companyUser/companyUser.module';
 import { RequestModule } from './request/request.module';
+import { VersionModule } from './version/version.module';
 
 @Module({
   imports: [
@@ -29,8 +30,8 @@ import { RequestModule } from './request/request.module';
       }),
       inject: [ConfigService],
     }),
+    VersionModule,
   ],
-  controllers: [AppController],
- 
+  controllers: [AppController] 
 })
 export class AppModule { }

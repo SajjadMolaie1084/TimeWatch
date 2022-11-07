@@ -46,7 +46,7 @@ export class RequestController {
   }
   @Get("/company/:id")
   findAllbyCompany(@Request() req,@Param('id') cid: string) {
-    return this.RequestService.findAllByCompany(req.user.uid,cid);
+    return this.RequestService.findAllByCompany(req.user,cid);
   }
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -59,7 +59,7 @@ export class RequestController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return `This action removes a #${id} cat`;
+  remove(@Param('id') id: string,@Request() req) {
+    return this.RequestService.delete(id, req.user.uid);
   }
 }

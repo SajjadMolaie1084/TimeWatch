@@ -15,8 +15,16 @@ export class RequestService {
   async findAll(uid: string) {
     return await this.request.find({ user: uid }).populate('company').populate('user').exec();
   }
-  async findAllByCompany(uid: string,cid) {
-    return await this.request.find({ user: uid,company:cid }).populate('company').populate('user').exec();
+  async findAllByCompany(user,cid) {
+    var comapny=user.company.filter(p=>p.company._id==cid)
+    if (comapny.length>0 && comapny[0].role=="Admin") {
+      return await this.request.find({ company:cid,status:"Pending" }).populate('company').populate('user').exec();
+    }
+    else{
+      return await this.request.find({ user: user.uid,company:cid }).populate('company').populate('user').exec();
+    }
+
+    
   }
   async findOne(id: string) {
     return await this.request.findOne({ _id: id }).populate('company').populate('user').exec();
@@ -24,8 +32,9 @@ export class RequestService {
   async update(id: string, updateRequest: requestDto) {
     return await this.request.updateOne({ _id: id }, updateRequest).exec()
   }
-  async delete(id: string) {
-    return await this.request.deleteOne({ _id: id }).exec()
+  async delete(id: string,uid: string) {
+    
+    return await this.request.deleteOne({ _id: id,user:uid,status:"Pending" }).exec()
   }
 
 }
