@@ -22,14 +22,14 @@ export class CompanyService {
       });
     }
   }
-  async findAll() {
-    return await this.company.find().exec();
+  async findAll(user) {
+    return await this.company.find({owner:user.uid}).exec();
   }
-  async findOne(id: string) {
-    return await this.company.findOne({ _id: id }).exec();
+  async findOne(id: string,user) {
+    return await this.company.findOne({ _id: id,owner:user.uid }).exec();
   }
-  async update(id: string, updateCompany: CreateCompanyDto) {
-    return await this.company.updateOne({ _id: id }, updateCompany).exec()
+  async update(id: string, updateCompany: CreateCompanyDto,user) {
+    return await this.company.updateOne({ _id: id,owner:user.uid }, updateCompany).exec()
   }
   async delete(id: string) {
     return await this.company.deleteOne({ _id: id }).exec()

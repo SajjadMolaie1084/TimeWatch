@@ -21,9 +21,9 @@ export class VersionService {
   async findAll() {
     return await this.version.find({},{name:1}).exec();
   }
-  async findOne(id: string) {
+  async findOne() {
     
-      return await this.version.findOne({ _id: id });
+      return await this.version.findOne({});
     
 
   }

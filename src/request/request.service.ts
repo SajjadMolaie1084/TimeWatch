@@ -23,8 +23,6 @@ export class RequestService {
     else{
       return await this.request.find({ user: user.uid,company:cid }).populate('company').populate('user').exec();
     }
-
-    
   }
   async findOne(id: string) {
     return await this.request.findOne({ _id: id }).populate('company').populate('user').exec();

@@ -5,3 +5,4 @@ export * from '../companyLocation/dto/CompanyLocation.dto';
 export * from '../companyUser/dto/CompanyUser.dto';
 export * from '../enterExit/dto/enterExit.dto';
 export * from '../request/dto/request.dto';
+export * from '../enterExit/dto/companydate.dto';

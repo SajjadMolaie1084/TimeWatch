@@ -26,7 +26,7 @@ import { createReadStream, readFileSync } from 'fs';
 
 @ApiTags('Version')
 @Controller('version')
-@UseGuards(JwtAuthGuard)
+
 export class VersionController {
   constructor(private VersionService: VersionService) { }
   @ApiOperation({
@@ -44,11 +44,7 @@ export class VersionController {
     status: 409,
     description: 'Version already exists',
   })
-  @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
-    console.log(file);
-  }
+  @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(FileInterceptor('file', {
     dest: './upload',
@@ -57,14 +53,15 @@ export class VersionController {
     var x = 0;
     return this.VersionService.create(dto, req.user, file.originalname, file.path);
   }
+  @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
     return this.VersionService.findAll();
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string, @Res({ passthrough: true }) res): Promise<StreamableFile> {
-    var version = await this.VersionService.findOne(id);
+  @Get("download")
+  async findOne(@Res({ passthrough: true }) res): Promise<StreamableFile> {
+    var version = await this.VersionService.findOne();
     if (version) {
       const file = createReadStream(version.filepath);
       res.set({

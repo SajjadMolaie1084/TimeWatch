@@ -12,7 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { enterExitDto} from '../validation';
+import { enterExitDto,companydateDto} from '../validation';
 import { EnterExitService } from './enterExit.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
@@ -53,16 +53,23 @@ export class EnterExitController {
   findAllbyUser(@Param('id') id: string) {
     return this.EnterExitService.findAllbyUser(id);
   }
+  @Get('/date/')
+  findbyDate(@Body() dto: companydateDto, @Request() req) {
+    return this.EnterExitService.findbyDate(dto,req.user);
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.EnterExitService.findOne(id);
   }
 
+  @Get('/last/:cid')
+  findbyLast(@Param('cid') cid: string, @Request() req) {
+    return this.EnterExitService.findbyLast(cid,req.user);
+  }
   @Put(':id')
   update(@Param('id') id: string, @Body() updateCatDto: enterExitDto) {
     return this.EnterExitService.update(id, updateCatDto);
   }
-
   @Delete(':id')
   remove(@Param('id') id: string) {
     return `This action removes a #${id} cat`;

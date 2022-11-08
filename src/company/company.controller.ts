@@ -41,17 +41,17 @@ export class CompanyController {
     return this.CompanyService.create(dto,req.user);
   }
   @Get()
-  findAll() {
-    return this.CompanyService.findAll();
+  findAll(@Request() req) {
+    return this.CompanyService.findAll(req.user);
   }
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.CompanyService.findOne(id);
+  findOne(@Param('id') id: string,@Request() req) {
+    return this.CompanyService.findOne(id,req.user);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateCatDto: CreateCompanyDto) {
-    return this.CompanyService.update(id, updateCatDto);
+  update(@Param('id') id: string, @Body() updateCatDto: CreateCompanyDto,@Request() req) {
+    return this.CompanyService.update(id, updateCatDto,req.user);
   }
 
   @Delete(':id')
