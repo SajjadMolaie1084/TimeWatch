@@ -21,6 +21,9 @@ export class CompanyUserService {
   async findAll(uid: String) {
     return await this.CompanyUser.find({user:uid}).lean().populate('company').populate('user').exec();
   }
+  async findAdmin(cid: String) {
+    return await this.CompanyUser.find({company:cid,role:"Admin"}).lean().populate('company').populate('user').exec();
+  }
   async findOne(id: string) {
     return await this.CompanyUser.findOne({ _id:id }).exec();
   }

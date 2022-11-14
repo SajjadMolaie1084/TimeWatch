@@ -53,7 +53,7 @@ export class EnterExitController {
   findAllbyUser(@Param('id') id: string) {
     return this.EnterExitService.findAllbyUser(id);
   }
-  @Get('/date/')
+  @Post('/date/')
   findbyDate(@Body() dto: companydateDto, @Request() req) {
     return this.EnterExitService.findbyDate(dto,req.user);
   }

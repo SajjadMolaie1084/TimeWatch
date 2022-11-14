@@ -13,7 +13,7 @@ export class UserService {
 
   async create(dto: SignUpDto): Promise<User> {
     if (await this.User.exists({ phoneNumber: dto.phoneNumber }).exec()) {
-       throw new HttpException('User already exists', HttpStatus.CONFLICT)
+      throw new HttpException('User already exists', HttpStatus.CONFLICT)
     }
     else {
       return await this.User.create(dto);
@@ -24,25 +24,29 @@ export class UserService {
   }
 
   async findOne(id: string) {
-    return await this.User.findOne({ _id:id });
+    return await this.User.findOne({ _id: id });
   }
   async findByCompany(cid: string) {
-    return await this.User.find({ company:cid });
+    return await this.User.find({ company: cid });
   }
   async findByPhone(phone: String) {
     return await this.User.findOne({ phoneNumber: phone });
   }
   //update user google FCM id
   async updateFCM(uid, dto: fcmDto) {
-    return await  this.User.updateOne({_id:uid},{fcm:dto.fcmID}).exec();
+    // var user= await  this.User.findOne({_id:uid}).exec();
+    // user.fcm=dto.fcmID;
+    // return await user.save();
+    console.log(fcmDto);
+    return await this.User.updateOne({ _id: uid }, { $set: { fcm: dto.fcmID } }).exec();
   }
   async update(uid, dto: SignUpDto) {
-    return await  this.User.updateOne({_id:uid},dto).exec();
+    return await this.User.updateOne({ _id: uid }, dto).exec();
   }
   async updateOtp(phoneNumber, otp) {
-    return await  this.User.updateOne({phoneNumber:phoneNumber},{otp:otp,otpDate:Date.now()}).exec();
+    return await this.User.updateOne({ phoneNumber: phoneNumber }, { otp: otp, otpDate: Date.now() }).exec();
   }
   async delete(uid) {
-    return await  this.User.updateOne({_id:uid},{delete:1}).exec();
+    return await this.User.updateOne({ _id: uid }, { delete: 1 }).exec();
   }
 }

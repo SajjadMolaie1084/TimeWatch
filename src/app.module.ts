@@ -11,6 +11,8 @@ import { ManagerUserModule } from './ManagerUser/ManagerUser.module';
 import { CompanyUserModule } from './companyUser/companyUser.module';
 import { RequestModule } from './request/request.module';
 import { VersionModule } from './version/version.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { NewsModule } from './news/news.module';
 
 @Module({
   imports: [
@@ -22,6 +24,7 @@ import { VersionModule } from './version/version.module';
     EnterExitModule,
     RequestModule,
     ManagerUserModule,
+    NewsModule,
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
@@ -31,6 +34,8 @@ import { VersionModule } from './version/version.module';
       inject: [ConfigService],
     }),
     VersionModule,
+    NotificationsModule,
+    
   ],
   controllers: [AppController] 
 })

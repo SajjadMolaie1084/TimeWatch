@@ -4,12 +4,14 @@ import { EnterExitController } from './enterExit.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { EnterExitSchema } from './model/enterExit.model';
 import { CompanyUserModule } from '../companyUser/companyUser.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Global()
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'EnterExit', schema: EnterExitSchema }]),
-    CompanyUserModule
+    CompanyUserModule,
+    NotificationsModule
   ],
   providers: [EnterExitService],
   controllers: [EnterExitController],

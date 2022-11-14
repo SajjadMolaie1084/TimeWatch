@@ -53,7 +53,7 @@ export class VersionController {
     var x = 0;
     return this.VersionService.create(dto, req.user, file.originalname, file.path);
   }
-  @UseGuards(JwtAuthGuard)
+
   @Get()
   findAll() {
     return this.VersionService.findAll();

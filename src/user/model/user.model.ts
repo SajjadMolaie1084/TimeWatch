@@ -5,6 +5,7 @@ export const UserSchema = new Schema({
   lastName: { type: String, require: true },
   phoneNumber: { type: String, require: true, unique: true },
   otp: { type: Number, require: true },
+  fcm:String,
   otpDate: Date,
 });
 

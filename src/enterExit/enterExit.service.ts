@@ -4,16 +4,31 @@ import { Model } from 'mongoose';
 import { EnterExit } from 'src/enterExit/model/enterExit.model';
 import { enterExitDto, companydateDto } from 'src/validation';
 import { CompanyUserService } from '../companyUser/companyUser.service';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class EnterExitService {
 
   constructor(
     @InjectModel('EnterExit') private EnterExit: Model<EnterExit>,
-    private companyUserService: CompanyUserService
+    private companyUserService: CompanyUserService,
+    private notificationsService: NotificationsService
+
   ) { }
   async create(dto: enterExitDto, user): Promise<EnterExit> {
-    const date = Date.now();
+    const date = new Date();
+    var admins = await this.companyUserService.findAdmin(dto.company);
+    var fcm_ids = [];
+    for (let index = 0; index < admins.length; index++) {
+      const admin = admins[index];
+      if (admin.user.fcm) {
+        fcm_ids.push(admin.user.fcm);
+      }
+    }
+    this.notificationsService.send(fcm_ids, user.firstName + "-" + user.lastName, dto.type == "Enter" ? "وارد شد" : "خارج شد", `${date.getHours()}:${date.getMinutes()}`);
+
+
+
     return await this.EnterExit.create({
       company: dto.company,
       location: dto.location,
@@ -75,7 +90,7 @@ export class EnterExitService {
         re_result[element.user._id].exit = element.date
       }
     }
-    return  Object.values(re_result);
+    return Object.values(re_result);
   }
   async findOne(id: string) {
     return await this.EnterExit.findOne({ _id: id }).exec();
