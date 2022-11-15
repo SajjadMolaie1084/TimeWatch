@@ -90,6 +90,9 @@ export class EnterExitService {
         re_result[element.user._id].exit = element.date
       }
     }
+    for (const key in re_result) {
+      
+    }
     return Object.values(re_result);
   }
   async findOne(id: string) {
