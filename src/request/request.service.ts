@@ -5,13 +5,16 @@ import { Request } from './model/request.model';
 import { requestDto } from '../validation';
 import { NotificationsService } from '../notifications/notifications.service';
 import { CompanyUserService } from '../companyUser/companyUser.service';
+import { EnterExitService } from '../enterExit/enterExit.service';
 
 @Injectable()
 export class RequestService {
   constructor(
     @InjectModel('Request') private request: Model<Request>,
     private companyUserService: CompanyUserService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private enterExitService: EnterExitService
+
   ) { }
   async create(dto: requestDto, user: any): Promise<Request> {
     var admins = await this.companyUserService.findAdmin(dto.company);
@@ -79,6 +82,16 @@ export class RequestService {
     var start = new Date(updateRequest.start);
     var start_j=new Intl.DateTimeFormat('fa-IR').format(start);
     var state=""
+    if (updateRequest.status == "Accept" && (updateRequest.type=="Enter" || updateRequest.type=="Exit")) {
+      
+      this.enterExitService.createWithModel({
+        company: updateRequest.company,
+        location: null,
+        user: updateRequest.user,
+        date: updateRequest.start,
+        type: updateRequest.type
+      })
+    }
     if (updateRequest.status == "Accept") {
       state="پذیرفته شد";
     }

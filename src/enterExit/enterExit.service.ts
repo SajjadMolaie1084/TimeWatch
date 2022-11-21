@@ -37,6 +37,10 @@ export class EnterExitService {
       type: dto.type
     });
   }
+  async createWithModel(model: any): Promise<EnterExit> {
+     return await this.EnterExit.create(model);
+  }
+  
   async findAllbyCompany(cid: string, user) {
     return await this.EnterExit.find({ company: cid, user: user.uid }).exec();
   }

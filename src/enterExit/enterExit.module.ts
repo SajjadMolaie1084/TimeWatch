@@ -15,5 +15,6 @@ import { NotificationsModule } from '../notifications/notifications.module';
   ],
   providers: [EnterExitService],
   controllers: [EnterExitController],
+  exports: [EnterExitService]
 })
 export class EnterExitModule {}
