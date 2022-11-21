@@ -19,13 +19,13 @@ export class CompanyUserService {
 
   }
   async findAll(uid: String) {
-    return await this.CompanyUser.find({user:uid}).lean().populate('company').populate('user').exec();
+    return await this.CompanyUser.find({user:uid}).lean().populate('company',["_id","name"]).populate('user',["_id","firstName","lastName","fcm"]).exec();
   }
   async findAdmin(cid: String) {
-    return await this.CompanyUser.find({company:cid,role:"Admin"}).lean().populate('company').populate('user').exec();
+    return await this.CompanyUser.find({company:cid,role:"Admin"}).lean().populate('company',["_id","name"]).populate('user',["_id","firstName","lastName","fcm"]).exec();
   }
   async findUser(cid: String) {
-    return await this.CompanyUser.find({company:cid}).lean().populate('company').populate('user').exec();
+    return await this.CompanyUser.find({company:cid}).lean().populate('company',["_id","name"]).populate('user',["_id","firstName","lastName","fcm"]).exec();
   }
   async findOne(id: string) {
     return await this.CompanyUser.findOne({ _id:id }).exec();

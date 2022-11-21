@@ -41,14 +41,11 @@ export class EnterExitService {
     return await this.EnterExit.find({ company: cid, user: user.uid }).exec();
   }
   async findbyLast(cid: string, user: any) {
-    var comapny = user.company.filter(p => p.company._id == cid);
-    // if (comapny.length > 0 && comapny[0].role == "Admin") {
-    //   var allEnterExit=await this.EnterExit.find({ company: cid}).exec();
-    //   for (let index = 0; index < array.length; index++) {
-    //     const element = array[index];
+    var date = new Date();
+    var start = date.setHours(0, 0, 0);
+    var end = date.setHours(23, 59, 59);
+    return this.EnterExit.findOne({ company: cid,user:user.uid , date: { $gte: start, $lte: end } }).sort("-date").lean().exec();
 
-    //   }
-    // }
 
 
   }
@@ -57,7 +54,7 @@ export class EnterExitService {
   }
   async findAll(user) {
     // var userCompany=await this.companyUserService.findAll(user.uid);
-    return await this.EnterExit.find({ user: user.uid }).populate('company').populate('user').populate('location').exec();
+    return await this.EnterExit.find({ user: user.uid }).populate('company', ["_id", "name"]).populate('user', ["_id", "firstName", "lastName", "fcm"]).populate('location', ["_id", "name"]).exec();
 
   }
   async findbyDate(dto: companydateDto, user) {
@@ -66,32 +63,42 @@ export class EnterExitService {
     var start = date.setHours(0, 0, 0);
     var end = date.setHours(23, 59, 59);
     var results = [];
+    var cuser = await this.companyUserService.findUser(dto.company);
+
+
     if (comapny.length > 0 && comapny[0].role == "Admin") {
-      results = await this.EnterExit.find({ company: dto.company, date: { $gte: start, $lte: end } }).sort("-date").populate('company').populate('user').populate('location').lean().exec();
+      results = await this.EnterExit.find({ company: dto.company, date: { $gte: start, $lte: end } }).sort("date").populate('company', ["_id", "name"]).populate('user', ["_id", "firstName", "lastName", "fcm"]).populate('location', ["_id", "name"]).lean().exec();
     }
     else {
-      results = await this.EnterExit.find({ company: dto.company, user: user.uid, date: { $gte: date, $lte: end } }).sort("-date").populate('company').populate('user').populate('location').lean().exec();
+      results = await this.EnterExit.find({ company: dto.company, user: user.uid, date: { $gte: date, $lte: end } })
+        .sort("-date").populate('company', ["_id", "name"]).populate('user', ["_id", "firstName", "lastName", "fcm"]).populate('location', ["_id", "name"]).lean().exec();
     }
     var re_result = {};
-    for (let index = 0; index < results.length; index++) {
-      const element = results[index];
-      if (!(element.user._id in re_result)) {
-        re_result[element.user._id] = {
-          firstName: element.user.firstName,
-          lastname: element.user.lastName,
-          enter: null,
-          exit: null
+    for (let index = 0; index < cuser.length; index++) {
+      const cu = cuser[index];
+      if (cu.user) {
+        re_result[cu.user._id] = {
+          id: cu.user._id,
+          firstName: cu.user.firstName,
+          lastname: cu.user.lastName,
+          enter: 0,
+          exit: 0,
+          lastState:"Absent"
         }
       }
-      if (element.type == "Enter" && re_result[element.user._id].enter == null) {
+
+    }
+    // return results;
+    for (let index = 0; index < results.length; index++) {
+      const element = results[index];
+      re_result[element.user._id].lastState=element.type;
+
+      if (element.type == "Enter" && re_result[element.user._id].enter == 0) {
         re_result[element.user._id].enter = element.date
       }
-      if (element.type == "Exit") {
+      if (element.type == "Exit" ) {
         re_result[element.user._id].exit = element.date
       }
-    }
-    for (const key in re_result) {
-      
     }
     return Object.values(re_result);
   }

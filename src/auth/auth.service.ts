@@ -40,7 +40,7 @@ export class AuthService {
 
     // if user not found throw error
     if (findUser === null)
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('User Not Found', HttpStatus.NOT_FOUND)
 
     // generate new otp to change it
     const otp = await this.generateOtp();
@@ -54,7 +54,7 @@ export class AuthService {
       otp: otp.toString(),
     });
 
-    return { otp: 0 }
+    return {otp: 0}
   }
   async verify(dto: VerifyDto) {
     // try to find User
@@ -146,6 +146,7 @@ export class AuthService {
     // get sneder number and path from .env file
     const number = this.config.get('SMS_SENDING_NUMBER');
     const path = this.config.get('SMS_SENDING_PATH');
+    console.log(dto.phoneNumber);
 
     // create json data
     const data = JSON.stringify({

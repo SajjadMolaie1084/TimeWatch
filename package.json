@@ -38,6 +38,7 @@
     "firebase-admin": "^11.1.0",
     "https": "^1.0.0",
     "md5": "^2.3.0",
+    "moment-jalaali": "^0.9.6",
     "mongoos": "^0.0.1-security",
     "mongoose": "^6.6.5",
     "pactum": "^3.2.2",

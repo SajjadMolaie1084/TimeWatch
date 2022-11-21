@@ -5,6 +5,4 @@ export class CreateNewsDto {
     text: string;
     @IsNotEmpty()
     company:String;
-    @IsNotEmpty()
-    user:String;
 }

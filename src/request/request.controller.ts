@@ -37,8 +37,8 @@ export class RequestController {
   })
  
   @Post()
-  create(@Body() dto: requestDto) {
-    return this.RequestService.create(dto);
+  create(@Body() dto: requestDto,@Request() req) {
+    return this.RequestService.create(dto,req.user);
   }
   @Get()
   findAll(@Request() req) {

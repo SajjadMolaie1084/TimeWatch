@@ -14,28 +14,30 @@ export class NewsService {
     private companyUserService: CompanyUserService,
     private notificationsService: NotificationsService
   ) { }
-  async create(createNewsDto: CreateNewsDto) {
+  async create(createNewsDto: CreateNewsDto, userx: any) {
     createNewsDto["date"] = Date.now();
-    var cUsers =await this.companyUserService.findUser(createNewsDto.company);
-    var ids=[];
+    createNewsDto["user"] = userx.uid;
+    var cUsers = await this.companyUserService.findUser(createNewsDto.company);
+    var ids = [];
     for (let index = 0; index < cUsers.length; index++) {
       const cu = cUsers[index];
       if (cu.user && cu.user.fcm) {
         ids.push(cu.user.fcm);
       }
-
-      
     }
-    this.notificationsService.send(ids,createNewsDto.text,"خبر","")
+    if (ids.length > 0) {
+      this.notificationsService.send(ids, createNewsDto.text, "خبر", "")
+
+    }
     return this.news.create(createNewsDto);
   }
 
   findAll(cid: String) {
-    return this.news.find({ company: cid }).lean().populate('company').populate('user').exec();
+    return this.news.find({ company: cid }).lean().populate('company', ["_id", "name"]).populate('user', ["_id", "firstName", "lastName"]).exec();
   }
 
   findOne(id: String) {
-    return this.news.find({ _id: id }).lean().populate('company').populate('user').exec();
+    return this.news.find({ _id: id }).lean().populate('company', ["_id", "name"]).populate('user', ["_id", "firstName", "lastName"]).exec();
   }
 
   update(id: String, updateNewsDto: UpdateNewsDto) {
