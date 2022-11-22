@@ -25,7 +25,7 @@ export class EnterExitService {
         fcm_ids.push(admin.user.fcm);
       }
     }
-    this.notificationsService.send(fcm_ids, user.firstName + "-" + user.lastName, dto.type == "Enter" ? "وارد شد" : "خارج شد", `${date.getHours()}:${date.getMinutes()}`);
+    this.notificationsService.send2a(fcm_ids, user.firstName + "-" + user.lastName, dto.type == "Enter" ? "وارد شد" : "خارج شد", `${date.getHours()}:${date.getMinutes()}`);
 
 
 
@@ -97,7 +97,7 @@ export class EnterExitService {
       const element = results[index];
       re_result[element.user._id].lastState=element.type;
 
-      if (element.type == "Enter" && re_result[element.user._id].enter == 0) {
+      if (element.type == "Enter" ) {
         re_result[element.user._id].enter = element.date
       }
       if (element.type == "Exit" ) {

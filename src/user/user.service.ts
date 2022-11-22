@@ -37,7 +37,7 @@ export class UserService {
     // var user= await  this.User.findOne({_id:uid}).exec();
     // user.fcm=dto.fcmID;
     // return await user.save();
-    console.log(fcmDto);
+    console.log(dto.fcmID);
     return await this.User.updateOne({ _id: uid }, { $set: { fcm: dto.fcmID } }).exec();
   }
   async update(uid, dto: SignUpDto) {
