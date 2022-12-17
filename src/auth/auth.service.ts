@@ -54,7 +54,7 @@ export class AuthService {
       otp: otp.toString(),
     });
 
-    return {otp: 0}
+    return {otp: otp}
   }
   async verify(dto: VerifyDto) {
     // try to find User

@@ -69,7 +69,10 @@ export class NotificationsService {
       }),
     )
   }
-  public async send2a(to, body, title, subtitle) {
+  public async send2a(to:string[], body, title, subtitle) {
+    if (to.length==0) {
+      return 0;
+    }
     var admin = require("firebase-admin");
     var config = {
       "type": "service_account",
@@ -104,7 +107,7 @@ export class NotificationsService {
 
     admin.messaging().sendMulticast(message)
       .then(response => {
-        console.log(response);
+        // console.log(response);
       })
       .catch(error => {
         console.log(error);

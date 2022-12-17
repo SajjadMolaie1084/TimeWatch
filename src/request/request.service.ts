@@ -99,6 +99,10 @@ export class RequestService {
       state="رد شد";
 
     }
+    if (updateRequest.status == "Pending") {
+      state="ویرایش شد";
+
+    }
     this.notificationsService.send([request.user.fcm],`${reqType} شما به تاریخ ${start_j} ${state} شد`, "درخواست", "");
 
     return await this.request.updateOne({ _id: id }, updateRequest).exec()

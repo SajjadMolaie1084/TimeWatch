@@ -16,7 +16,8 @@ export class EnterExitService {
 
   ) { }
   async create(dto: enterExitDto, user): Promise<EnterExit> {
-    const date = new Date();
+    const date = Date.now();
+    const date2 = new Date();
     var admins = await this.companyUserService.findAdmin(dto.company);
     var fcm_ids = [];
     for (let index = 0; index < admins.length; index++) {
@@ -25,7 +26,8 @@ export class EnterExitService {
         fcm_ids.push(admin.user.fcm);
       }
     }
-    this.notificationsService.send2a(fcm_ids, user.firstName + "-" + user.lastName, dto.type == "Enter" ? "وارد شد" : "خارج شد", `${date.getHours()}:${date.getMinutes()}`);
+    
+    this.notificationsService.send2a(fcm_ids, user.firstName + "-" + user.lastName, dto.type == "Enter" ? "وارد شد" : "خارج شد", `${("0" + date2.getHours()).slice(-2)}:${("0" + date2.getMinutes()).slice(-2)}`);
 
 
 
@@ -38,9 +40,9 @@ export class EnterExitService {
     });
   }
   async createWithModel(model: any): Promise<EnterExit> {
-     return await this.EnterExit.create(model);
+    return await this.EnterExit.create(model);
   }
-  
+
   async findAllbyCompany(cid: string, user) {
     return await this.EnterExit.find({ company: cid, user: user.uid }).exec();
   }
@@ -48,7 +50,18 @@ export class EnterExitService {
     var date = new Date();
     var start = date.setHours(0, 0, 0);
     var end = date.setHours(23, 59, 59);
-    return this.EnterExit.findOne({ company: cid,user:user.uid , date: { $gte: start, $lte: end } }).sort("-date").lean().exec();
+    let result = await this.EnterExit.findOne({ company: cid, user: user.uid, date: { $gte: start, $lte: end } }).sort("-date").lean().exec();
+    if (result) {
+      return result
+    }
+    else {
+      return {
+        "company": cid,
+        "user": user.uid,
+        "type": "Absent",
+      }
+    }
+
 
 
 
@@ -72,10 +85,10 @@ export class EnterExitService {
 
     if (comapny.length > 0 && comapny[0].role == "Admin") {
       results = await this.EnterExit.find({ company: dto.company, date: { $gte: start, $lte: end } }).sort("date").populate('company', ["_id", "name"]).populate('user', ["_id", "firstName", "lastName", "fcm"]).populate('location', ["_id", "name"]).lean().exec();
+
     }
     else {
-      results = await this.EnterExit.find({ company: dto.company, user: user.uid, date: { $gte: date, $lte: end } })
-        .sort("-date").populate('company', ["_id", "name"]).populate('user', ["_id", "firstName", "lastName", "fcm"]).populate('location', ["_id", "name"]).lean().exec();
+      throw new HttpException("Access denied", 403)
     }
     var re_result = {};
     for (let index = 0; index < cuser.length; index++) {
@@ -87,7 +100,7 @@ export class EnterExitService {
           lastname: cu.user.lastName,
           enter: 0,
           exit: 0,
-          lastState:"Absent"
+          lastState: "Absent"
         }
       }
 
@@ -95,14 +108,50 @@ export class EnterExitService {
     // return results;
     for (let index = 0; index < results.length; index++) {
       const element = results[index];
-      re_result[element.user._id].lastState=element.type;
+      re_result[element.user._id].lastState = element.type;
 
-      if (element.type == "Enter" ) {
+      if (element.type == "Enter") {
         re_result[element.user._id].enter = element.date
       }
-      if (element.type == "Exit" ) {
+      if (element.type == "Exit") {
         re_result[element.user._id].exit = element.date
       }
+    }
+    return Object.values(re_result);
+  }
+  async findbyDateAll(dto: companydateDto, user) {
+    var comapny = user.company.filter(p => p.company._id == dto.company)
+    var date = new Date(dto.date);
+    var start = date.setHours(0, 0, 0);
+    var end = date.setHours(23, 59, 59)+3*3600+30*60;
+    var results = [];
+    var cuser = await this.companyUserService.findUser(dto.company);
+
+
+    if (comapny.length > 0 && comapny[0].role == "Admin") {
+      results = await this.EnterExit.find({ company: dto.company, date: { $gte: start, $lte: end } }).sort("date").populate('user', ["_id", "firstName", "lastName", "fcm"]).lean().exec();
+    }
+    else {
+      throw new HttpException("Access denied", 403);
+    }
+    var re_result = {};
+    for (let index = 0; index < cuser.length; index++) {
+      const cu = cuser[index];
+      if (cu.user) {
+        re_result[cu.user._id] = {
+          id: cu.user._id,
+          firstName: cu.user.firstName,
+          lastname: cu.user.lastName,
+          lastState: "Absent",
+          logs: results.filter(x => x.user._id.toString() == cu.user._id.toString())
+        }
+      }
+
+    }
+    // return results;
+    for (let index = 0; index < results.length; index++) {
+      const element = results[index];
+      re_result[element.user._id].lastState = element.type;
     }
     return Object.values(re_result);
   }

@@ -3,6 +3,8 @@ import { IsNotEmpty, IsPhoneNumber, IsString } from 'class-validator';
 export class CreateNewsDto {
     @IsNotEmpty()
     text: string;
-    @IsNotEmpty()
+    @IsString()
     company:String;
+    @IsString()
+    targetUser:String;
 }

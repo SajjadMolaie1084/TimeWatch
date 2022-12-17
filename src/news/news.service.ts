@@ -21,19 +21,22 @@ export class NewsService {
     var ids = [];
     for (let index = 0; index < cUsers.length; index++) {
       const cu = cUsers[index];
-      if (cu.user && cu.user.fcm) {
+      if (createNewsDto.targetUser) {
+        if (cu.user && cu.user._id.toString() == createNewsDto.targetUser) {
+          ids.push(cu.user.fcm);
+        }
+      } else if (cu.user && cu.user.fcm) {
         ids.push(cu.user.fcm);
       }
     }
     if (ids.length > 0) {
       this.notificationsService.send(ids, createNewsDto.text, "خبر", "")
-
     }
     return this.news.create(createNewsDto);
   }
 
   findAll(cid: String) {
-    return this.news.find({ company: cid }).lean().populate('company', ["_id", "name"]).populate('user', ["_id", "firstName", "lastName"]).exec();
+    return this.news.find({ company: cid, targetUser: null }).lean().populate('company', ["_id", "name"]).populate('user', ["_id", "firstName", "lastName"]).exec();
   }
 
   findOne(id: String) {
