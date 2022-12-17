@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsPhoneNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsPhoneNumber, IsString,IsOptional } from 'class-validator';
 
 export class CreateNewsDto {
     @IsNotEmpty()
@@ -6,5 +6,6 @@ export class CreateNewsDto {
     @IsString()
     company:String;
     @IsString()
+    @IsOptional()
     targetUser:String;
 }

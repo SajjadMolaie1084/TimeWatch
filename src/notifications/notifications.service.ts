@@ -107,7 +107,7 @@ export class NotificationsService {
 
     admin.messaging().sendMulticast(message)
       .then(response => {
-        // console.log(response);
+        console.log(response);
       })
       .catch(error => {
         console.log(error);
