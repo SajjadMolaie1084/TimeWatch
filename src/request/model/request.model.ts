@@ -7,7 +7,10 @@ export const RequestSchema = new Schema({
   end:Date,
   status: { type: String, enum: ['Pending', 'Accept','Reject'], default: 'Pending'},
   type: { type: String, enum: ['Vacation', 'Enter','Exit','Mission'] },
-  description:String
+  description:String,
+  lastUpdate:Date,
+
+
 });
 
 export interface Request {
@@ -19,4 +22,5 @@ export interface Request {
   status: String;
   type: String;
   description:String;
+  lastUpdate:Date;
 }

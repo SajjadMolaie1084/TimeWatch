@@ -39,8 +39,7 @@ export class RequestService {
       }
     }
     this.notificationsService.send(fcm_ids, user.firstName + "-" + user.lastName, reqType, dto.description);
-
-
+    dto["lastUpdate"]=Date.now();
     return await this.request.create(dto);
   }
   async findAll(uid: string) {
@@ -104,7 +103,7 @@ export class RequestService {
 
     }
     this.notificationsService.send([request.user.fcm],`${reqType} شما به تاریخ ${start_j} ${state} شد`, "درخواست", "");
-
+    updateRequest["lastUpdate"]=Date.now();
     return await this.request.updateOne({ _id: id }, updateRequest).exec()
   }
   async delete(id: string, uid: string) {
