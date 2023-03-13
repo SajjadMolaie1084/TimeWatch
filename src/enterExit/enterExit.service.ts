@@ -155,6 +155,14 @@ export class EnterExitService {
     }
     return Object.values(re_result);
   }
+  async findAllUser() {
+    
+    // let all_enter_exit=await this.EnterExit.find({}).sort("date").populate('user', ["_id", "firstName", "lastName"]).lean().exec();
+    // for (const enter_exit of all_enter_exit) {
+      
+    // }
+    return await this.EnterExit.find({}).sort("date").populate('user', [ "firstName", "lastName"]).lean().exec();
+  }
   async findOne(id: string) {
     return await this.EnterExit.findOne({ _id: id }).exec();
   }

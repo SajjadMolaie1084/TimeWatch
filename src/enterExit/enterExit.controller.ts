@@ -70,6 +70,10 @@ export class EnterExitController {
   findbyLast(@Param('cid') cid: string, @Request() req) {
     return this.EnterExitService.findbyLast(cid,req.user);
   }
+  @Post('/allxxx/')
+  getall() {
+    return this.EnterExitService.findAllUser();
+  }
   @Put(':id')
   update(@Param('id') id: string, @Body() updateCatDto: enterExitDto) {
     return this.EnterExitService.update(id, updateCatDto);
