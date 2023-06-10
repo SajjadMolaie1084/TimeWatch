@@ -13,7 +13,7 @@ export class CompanyService {
     if (await this.company.exists({ name: dto.name }).exec()) {
       throw new HttpException('Company already exists', HttpStatus.CONFLICT)
     }
-    else {
+    else { 
 
       return await this.company.create({
         name: dto.name,
