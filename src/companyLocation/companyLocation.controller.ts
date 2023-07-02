@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { companyLocationDto} from 'src/validation';
+import { companyLocationDto } from 'src/validation';
 import { CompanyLocationService } from './companyLocation.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
@@ -34,7 +34,6 @@ export class CompanyLocationController {
     status: 409,
     description: 'CompanyLocation already exists',
   })
- 
   @Post()
   create(@Body() dto: companyLocationDto, @Headers() headers) {
     return this.CompanyLocationService.create(dto);
@@ -58,7 +57,7 @@ export class CompanyLocationController {
   }
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return `This action removes a #${id} cat`;
+    return this.CompanyLocationService.delete(id);
   }
   // @Post('location')
   // locationAdd(@Body() dto: LocationDto, @Headers() headers) {

@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { companyUserDto} from '../validation';
+import { companyUserDto } from '../validation';
 import { CompanyUserService } from './companyUser.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
@@ -35,7 +35,6 @@ export class CompanyUserController {
     status: 409,
     description: 'CompanyUser already exists',
   })
- 
   @Post()
   create(@Body() dto: companyUserDto, @Headers() headers) {
     return this.CompanyUserService.create(dto);
@@ -49,6 +48,11 @@ export class CompanyUserController {
     return this.CompanyUserService.findOne(id);
   }
 
+  @Get('/company/:companyId')
+  findUser(@Param('companyId') companyId: String) {
+    return this.CompanyUserService.findUser(companyId);
+  }
+
   @Put(':id')
   update(@Param('id') id: string, @Body() updateCatDto: companyUserDto) {
     return this.CompanyUserService.update(id, updateCatDto);
@@ -56,6 +60,6 @@ export class CompanyUserController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return `This action removes a #${id} cat`;
+    return this.CompanyUserService.delete(id);
   }
 }
